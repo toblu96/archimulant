@@ -3,20 +3,34 @@ export type ErrorCode
     | 'urn:archimulant:invalid-input'
     | 'urn:archimulant:internal-error'
 
+export interface ErrorOptions {
+  cause?: unknown
+  why?: string
+  fix?: string
+}
+
 export class AdapterError extends Error {
   readonly code: ErrorCode
-  constructor(code: ErrorCode, message: string, cause?: unknown) {
-    super(message, { cause })
+  readonly why?: string
+  readonly fix?: string
+  constructor(code: ErrorCode, message: string, options?: ErrorOptions) {
+    super(message, { cause: options?.cause })
     this.name = 'AdapterError'
     this.code = code
+    this.why = options?.why
+    this.fix = options?.fix
   }
 }
 
 export class ApplicationError extends Error {
   readonly code: ErrorCode
-  constructor(code: ErrorCode, message: string, cause?: unknown) {
-    super(message, { cause })
+  readonly why?: string
+  readonly fix?: string
+  constructor(code: ErrorCode, message: string, options?: ErrorOptions) {
+    super(message, { cause: options?.cause })
     this.name = 'ApplicationError'
     this.code = code
+    this.why = options?.why
+    this.fix = options?.fix
   }
 }

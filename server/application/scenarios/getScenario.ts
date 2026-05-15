@@ -13,14 +13,15 @@ export async function getScenario(
     throw new ApplicationError(
       'urn:archimulant:internal-error',
       `Failed to retrieve scenario: ${id}`,
-      cause
+      { cause }
     )
   }
 
   if (!scenario) {
     throw new ApplicationError(
       'urn:archimulant:scenario-not-found',
-      `Scenario not found: ${id}`
+      `Scenario not found: ${id}`,
+      { fix: 'Use GET /api/scenarios to retrieve available scenario identifiers.' }
     )
   }
 

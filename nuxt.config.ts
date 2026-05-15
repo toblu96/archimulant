@@ -1,6 +1,5 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ['@nuxt/eslint', '@nuxt/ui'],
+  modules: ['@nuxt/eslint', '@nuxt/ui', 'evlog/nuxt'],
   devtools: {
     enabled: true
   },
@@ -11,8 +10,10 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-01-15',
   nitro: {
     experimental: {
-      openAPI: true
-    }
+      openAPI: true,
+      asyncContext: true
+    },
+    errorHandler: '~~/server/error'
   },
   eslint: {
     config: {

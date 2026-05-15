@@ -3,7 +3,6 @@ import { join } from 'node:path'
 import { ScenarioFileSchema } from '~~/server/domain/scenario/schema'
 import { computeBaselineMetrics } from '~~/server/domain/scenario/computeMetrics'
 import { AdapterError } from '~~/server/utils/errors'
-import { logger } from '~~/server/utils/logger'
 import type { ScenarioRepository } from './port'
 import type { Scenario, ScenarioSummary } from '~~/server/domain/scenario/schema'
 
@@ -17,7 +16,7 @@ async function loadAll(): Promise<Scenario[]> {
     throw new AdapterError(
       'urn:archimulant:internal-error',
       `Failed to read scenarios directory: ${SCENARIOS_DIR}`,
-      cause
+      { cause }
     )
   }
 
@@ -33,6 +32,7 @@ async function loadAll(): Promise<Scenario[]> {
         baselineMetrics: computeBaselineMetrics(parsed.topology)
       })
     } catch (cause) {
+      const logger = useLogger(useEvent())
       logger.warn(`Skipping invalid scenario file: ${file}`, { cause })
     }
   }

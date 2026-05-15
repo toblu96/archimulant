@@ -11,7 +11,7 @@ export async function listScenarios(
     throw new ApplicationError(
       'urn:archimulant:internal-error',
       'Failed to list scenarios',
-      cause
+      { cause }
     )
   }
 }
