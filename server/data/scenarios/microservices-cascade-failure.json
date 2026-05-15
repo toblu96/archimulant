@@ -1,0 +1,338 @@
+{
+  "id": "microservices-cascade-failure",
+  "meta": {
+    "title": "Microservices Cascade Failure",
+    "description": "Your fintech platform uses a microservices architecture. When the Payment Service slows down under load, threads pile up in the Order Service waiting for responses — eventually bringing both services down. A slow dependency is taking out the whole system. Isolate the failure and keep the platform available.",
+    "difficulty": "intermediate",
+    "tags": [
+      "circuit-breaker",
+      "bulkhead",
+      "resilience",
+      "microservices"
+    ],
+    "estimatedMinutes": 20
+  },
+  "budget": {
+    "yearlyOperational": {
+      "limit": 8000,
+      "baselineCost": 2400
+    },
+    "oneTimeInvestment": {
+      "limit": 5000,
+      "baselineCost": 0
+    }
+  },
+  "targetMetrics": {
+    "availability": 99.9,
+    "p99LatencyMillis": 500,
+    "requestsPerSecond": 400
+  },
+  "topology": {
+    "nodes": [
+      {
+        "id": "client",
+        "label": "Browser Client",
+        "type": "person",
+        "position": {
+          "x": 50,
+          "y": 300
+        },
+        "metrics": {
+          "requestsPerSecond": 600
+        }
+      },
+      {
+        "id": "api-gateway",
+        "label": "API Gateway",
+        "type": "gateway",
+        "position": {
+          "x": 300,
+          "y": 300
+        },
+        "metrics": {
+          "availability": 0.999,
+          "maxThroughput": 800,
+          "baseLatencyMillis": 10
+        }
+      },
+      {
+        "id": "order-service",
+        "label": "Order Service",
+        "type": "service",
+        "position": {
+          "x": 550,
+          "y": 150
+        },
+        "metrics": {
+          "availability": 0.99,
+          "maxThroughput": 500,
+          "baseLatencyMillis": 60
+        }
+      },
+      {
+        "id": "payment-service",
+        "label": "Payment Service",
+        "type": "service",
+        "position": {
+          "x": 550,
+          "y": 450
+        },
+        "metrics": {
+          "availability": 0.97,
+          "maxThroughput": 300,
+          "baseLatencyMillis": 250
+        }
+      },
+      {
+        "id": "payment-provider",
+        "label": "Payment Provider API",
+        "type": "externalSystem",
+        "position": {
+          "x": 800,
+          "y": 500
+        },
+        "metrics": {
+          "availability": 0.995,
+          "maxThroughput": 500,
+          "baseLatencyMillis": 180
+        }
+      },
+      {
+        "id": "db",
+        "label": "Shared Database",
+        "type": "database",
+        "position": {
+          "x": 800,
+          "y": 250
+        },
+        "metrics": {
+          "availability": 0.995,
+          "maxThroughput": 400,
+          "baseLatencyMillis": 30
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "client-gateway",
+        "label": "API request",
+        "source": "client",
+        "target": "api-gateway",
+        "metrics": {
+          "latencyMillis": 5,
+          "maxThroughput": 1000,
+          "failRate": 0.001
+        }
+      },
+      {
+        "id": "gateway-order",
+        "label": "place order",
+        "source": "api-gateway",
+        "target": "order-service",
+        "metrics": {
+          "latencyMillis": 5,
+          "maxThroughput": 800,
+          "failRate": 0.005
+        }
+      },
+      {
+        "id": "gateway-payment",
+        "label": "process payment",
+        "source": "api-gateway",
+        "target": "payment-service",
+        "metrics": {
+          "latencyMillis": 5,
+          "maxThroughput": 800,
+          "failRate": 0.015
+        }
+      },
+      {
+        "id": "order-db",
+        "label": "read/write order",
+        "source": "order-service",
+        "target": "db",
+        "metrics": {
+          "latencyMillis": 15,
+          "maxThroughput": 500,
+          "failRate": 0.002
+        }
+      },
+      {
+        "id": "payment-db",
+        "label": "read/write payment",
+        "source": "payment-service",
+        "target": "db",
+        "metrics": {
+          "latencyMillis": 15,
+          "maxThroughput": 300,
+          "failRate": 0.003
+        }
+      },
+      {
+        "id": "payment-provider-call",
+        "label": "charge card",
+        "source": "payment-service",
+        "target": "payment-provider",
+        "metrics": {
+          "latencyMillis": 10,
+          "maxThroughput": 500,
+          "failRate": 0.005
+        }
+      }
+    ]
+  },
+  "improvements": [
+    {
+      "id": "circuit-breaker-payment",
+      "title": "Add Circuit Breaker on Payment Service",
+      "description": "Wrap calls to the Payment Service with a circuit breaker. When error rates exceed a threshold the circuit opens, failing fast instead of queueing threads — protecting the Order Service from cascading failure.",
+      "learnMoreSlug": "circuit-breaker",
+      "appliesTo": {
+        "scope": "targeted",
+        "targets": [
+          {
+            "type": "edge",
+            "id": "gateway-payment"
+          }
+        ]
+      },
+      "cost": {
+        "yearlyOperational": 0,
+        "oneTimeInvestment": 0
+      },
+      "effects": {
+        "availabilityDelta": 0,
+        "baseLatencyMillisDelta": -5,
+        "throughputMultiplier": 1.0,
+        "failRateDelta": -0.01
+      }
+    },
+    {
+      "id": "bulkhead-order",
+      "title": "Apply Bulkhead to Order Service",
+      "description": "Isolate thread pools per dependency in the Order Service. A slow Payment Service can no longer exhaust the shared thread pool and block order processing.",
+      "learnMoreSlug": "bulkhead-pattern",
+      "appliesTo": {
+        "scope": "targeted",
+        "targets": [
+          {
+            "type": "node",
+            "id": "order-service"
+          }
+        ]
+      },
+      "cost": {
+        "yearlyOperational": 0,
+        "oneTimeInvestment": 0
+      },
+      "effects": {
+        "availabilityDelta": 0.008,
+        "baseLatencyMillisDelta": -20,
+        "throughputMultiplier": 1.5,
+        "failRateDelta": 0
+      }
+    },
+    {
+      "id": "scale-payment-service",
+      "title": "Scale Payment Service",
+      "description": "Run additional Payment Service instances to handle the high processing load and reduce per-instance latency.",
+      "learnMoreSlug": "horizontal-scaling",
+      "appliesTo": {
+        "scope": "targeted",
+        "targets": [
+          {
+            "type": "node",
+            "id": "payment-service"
+          }
+        ]
+      },
+      "cost": {
+        "yearlyOperational": 1800,
+        "oneTimeInvestment": 0
+      },
+      "effects": {
+        "availabilityDelta": 0.02,
+        "baseLatencyMillisDelta": -150,
+        "throughputMultiplier": 2.5,
+        "failRateDelta": 0
+      }
+    },
+    {
+      "id": "split-database",
+      "title": "Split Shared Database",
+      "description": "Give each service its own database schema and connection pool. Eliminates resource contention between Order and Payment services on the shared database.",
+      "learnMoreSlug": "database-per-service",
+      "appliesTo": {
+        "scope": "targeted",
+        "targets": [
+          {
+            "type": "edge",
+            "id": "order-db"
+          },
+          {
+            "type": "edge",
+            "id": "payment-db"
+          }
+        ]
+      },
+      "cost": {
+        "yearlyOperational": 2400,
+        "oneTimeInvestment": 200
+      },
+      "effects": {
+        "availabilityDelta": 0,
+        "baseLatencyMillisDelta": -10,
+        "throughputMultiplier": 2.0,
+        "failRateDelta": -0.002
+      }
+    },
+    {
+      "id": "async-payment-queue",
+      "title": "Async Payment via Queue",
+      "description": "Decouple payment processing by publishing to a message queue. Orders are confirmed immediately; payment is processed asynchronously, eliminating synchronous wait time in the critical path.",
+      "learnMoreSlug": "async-messaging",
+      "appliesTo": {
+        "scope": "targeted",
+        "targets": [
+          {
+            "type": "edge",
+            "id": "gateway-payment"
+          },
+          {
+            "type": "node",
+            "id": "payment-service"
+          }
+        ]
+      },
+      "cost": {
+        "yearlyOperational": 960,
+        "oneTimeInvestment": 0
+      },
+      "effects": {
+        "availabilityDelta": 0,
+        "baseLatencyMillisDelta": -200,
+        "throughputMultiplier": 4.0,
+        "failRateDelta": -0.012
+      }
+    },
+    {
+      "id": "automated-health-checks",
+      "title": "Automated Health Checks Across All Services",
+      "description": "Deploy health check probes and auto-restart policies across all services. Reduces mean time to recovery and improves baseline availability without impacting throughput.",
+      "learnMoreSlug": "health-checks",
+      "appliesTo": {
+        "scope": "general"
+      },
+      "cost": {
+        "yearlyOperational": 0,
+        "oneTimeInvestment": 0
+      },
+      "effects": {
+        "availabilityDelta": 0.003,
+        "baseLatencyMillisDelta": 0,
+        "throughputMultiplier": 1.0,
+        "failRateDelta": -0.001
+      }
+    }
+  ]
+}
