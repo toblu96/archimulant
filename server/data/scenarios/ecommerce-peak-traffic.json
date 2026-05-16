@@ -24,8 +24,8 @@
   },
   "targetMetrics": {
     "availability": 99.5,
-    "p99LatencyMillis": 200,
-    "requestsPerSecond": 600
+    "throughputRps": 200,
+    "latencyMs": 600
   },
   "topology": {
     "nodes": [
@@ -51,8 +51,8 @@
         },
         "metrics": {
           "availability": 0.99,
-          "maxThroughput": 250,
-          "baseLatencyMillis": 150
+          "throughputRps": 250,
+          "latencyMs": 150
         }
       },
       {
@@ -65,8 +65,8 @@
         },
         "metrics": {
           "availability": 0.995,
-          "maxThroughput": 150,
-          "baseLatencyMillis": 40
+          "throughputRps": 150,
+          "latencyMs": 40
         }
       }
     ],
@@ -77,8 +77,8 @@
         "source": "client",
         "target": "api",
         "metrics": {
-          "latencyMillis": 5,
-          "maxThroughput": 1000,
+          "latencyMs": 5,
+          "throughputRps": 1000,
           "failRate": 0.001
         }
       },
@@ -88,8 +88,8 @@
         "source": "api",
         "target": "db",
         "metrics": {
-          "latencyMillis": 20,
-          "maxThroughput": 250,
+          "latencyMs": 20,
+          "throughputRps": 250,
           "failRate": 0.002
         }
       }
@@ -101,104 +101,50 @@
       "title": "Scale API Server Horizontally",
       "description": "Run multiple API server instances behind a load balancer. Distributes traffic and removes the single point of failure.",
       "learnMoreSlug": "horizontal-scaling",
-      "appliesTo": {
-        "scope": "targeted",
-        "targets": [
-          {
-            "type": "node",
-            "id": "api"
-          }
-        ]
-      },
-      "cost": {
-        "yearlyOperational": 1440,
-        "oneTimeInvestment": 0
-      },
-      "effects": {
-        "availabilityDelta": 0.007,
-        "baseLatencyMillisDelta": -60,
-        "throughputMultiplier": 3.5,
-        "failRateDelta": 0
-      }
+      "cost": { "yearlyOperational": 1440, "oneTimeInvestment": 0 },
+      "appliesTo": [
+        {
+          "targetId": "api",
+          "effects": { "availability": 0.7, "throughputRps": 500, "latencyMs": -60 }
+        }
+      ]
     },
     {
       "id": "add-redis-cache",
       "title": "Add Redis Cache",
       "description": "Cache frequent database queries in Redis. Reduces DB load, lowers latency for repeated reads, and absorbs traffic spikes.",
       "learnMoreSlug": "caching-strategies",
-      "appliesTo": {
-        "scope": "targeted",
-        "targets": [
-          {
-            "type": "edge",
-            "id": "api-db"
-          }
-        ]
-      },
-      "cost": {
-        "yearlyOperational": 600,
-        "oneTimeInvestment": 0
-      },
-      "effects": {
-        "availabilityDelta": 0,
-        "baseLatencyMillisDelta": -15,
-        "throughputMultiplier": 3.0,
-        "failRateDelta": -0.001
-      }
+      "cost": { "yearlyOperational": 600, "oneTimeInvestment": 0 },
+      "appliesTo": [
+        {
+          "targetId": "api-db",
+          "effects": { "latencyMs": -15, "throughputRps": 250, "failRate": -0.001 }
+        }
+      ]
     },
     {
       "id": "db-read-replica",
       "title": "Add Database Read Replica",
       "description": "Add a read replica for the database. Distributes read queries across two nodes, increasing read throughput and providing a failover target.",
       "learnMoreSlug": "database-replication",
-      "appliesTo": {
-        "scope": "targeted",
-        "targets": [
-          {
-            "type": "node",
-            "id": "db"
-          }
-        ]
-      },
-      "cost": {
-        "yearlyOperational": 1200,
-        "oneTimeInvestment": 0
-      },
-      "effects": {
-        "availabilityDelta": 0.004,
-        "baseLatencyMillisDelta": -10,
-        "throughputMultiplier": 2.2,
-        "failRateDelta": 0
-      }
+      "cost": { "yearlyOperational": 1200, "oneTimeInvestment": 0 },
+      "appliesTo": [
+        {
+          "targetId": "db",
+          "effects": { "availability": 0.4, "throughputRps": 180, "latencyMs": -10 }
+        }
+      ]
     },
     {
       "id": "health-checks",
       "title": "Enable Health Checks & Auto-restart",
       "description": "Add liveness and readiness probes to all services. Unhealthy instances are detected and restarted automatically, reducing unplanned downtime across the entire system.",
       "learnMoreSlug": "health-checks",
-      "appliesTo": {
-        "scope": "targeted",
-        "targets": [
-          {
-            "type": "node",
-            "id": "api"
-          },
-          {
-            "type": "node",
-            "id": "db"
-          }
-        ]
-      },
-      "cost": {
-        "yearlyOperational": 0,
-        "oneTimeInvestment": 0
-      },
-      "effects": {
-        "availabilityDelta": 0.004,
-        "baseLatencyMillisDelta": 0,
-        "throughputMultiplier": 1.0,
-        "failRateDelta": 0
-      }
+      "cost": { "yearlyOperational": 0, "oneTimeInvestment": 0 },
+      "appliesTo": [
+        { "targetId": "api", "effects": { "availability": 0.2 } },
+        { "targetId": "db", "effects": { "availability": 0.2 } }
+      ]
     }
   ]
 }

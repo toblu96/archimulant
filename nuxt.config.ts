@@ -4,6 +4,9 @@ export default defineNuxtConfig({
     enabled: true
   },
   css: ['~/assets/css/main.css'],
+  runtimeConfig: {
+    scenariosDir: 'server/data/scenarios'
+  },
   routeRules: {
     '/': { prerender: true }
   },

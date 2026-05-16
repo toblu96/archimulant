@@ -1,5 +1,4 @@
-import { listScenarios } from '~~/server/application/scenarios/listScenarios'
-import { scenarioRepository } from '~~/server/adapters/scenarios/FileScenarioRepository'
+import { listScenarios } from '~~/server/application/scenarios/list-scenarios.usecase'
 
 defineRouteMeta({
   openAPI: {
@@ -49,8 +48,8 @@ defineRouteMeta({
                     type: 'object',
                     properties: {
                       availability: { type: 'number' },
-                      p99LatencyMillis: { type: 'number' },
-                      requestsPerSecond: { type: 'number' }
+                      latencyMs: { type: 'number' },
+                      throughputRps: { type: 'number' }
                     }
                   }
                 }
@@ -77,6 +76,6 @@ defineRouteMeta({
   }
 })
 
-export default defineEventHandler(async () => {
-  return await listScenarios(scenarioRepository)
+export default defineEventHandler(async (event) => {
+  return await listScenarios(event.context.scope)
 })

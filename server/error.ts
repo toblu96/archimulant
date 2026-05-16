@@ -1,9 +1,11 @@
-import { getRequestURL, isError, send, setResponseHeaders, setResponseStatus } from 'h3'
-import type { ErrorCode } from '~~/server/utils/errors'
+import { getRequestURL, send, setResponseHeaders, setResponseStatus, type H3Event } from 'h3'
+import { findAppError, type ErrorCode } from '~~/server/domain/errors'
 
-// Only generic, cross-cutting codes belong here.
-// Endpoint-specific codes (e.g. scenario-not-found) must be handled
-// in the respective API route handler.
+/**
+ * Catalog for CROSS-CUTTING error codes only.
+ * Endpoint-specific codes (e.g. scenario-not-found) are mapped in the
+ * respective API route via createError({ data: { type, title, why?, fix? } }).
+ */
 const GENERIC_CATALOG: Partial<Record<ErrorCode, { title: string, status: number }>> = {
   'urn:archimulant:invalid-input': { title: 'Invalid Input', status: 400 },
   'urn:archimulant:internal-error': { title: 'Internal Server Error', status: 500 }
@@ -18,7 +20,19 @@ const SECURITY_HEADERS = {
   'cache-control': 'no-cache'
 }
 
-function respond(event: Parameters<typeof setResponseStatus>[0], status: number, body: Record<string, unknown>) {
+function extractDetail(message: string): string {
+  try {
+    const parsed = JSON.parse(message)
+    if (Array.isArray(parsed) && typeof parsed[0]?.message === 'string') {
+      return parsed[0].message
+    }
+  } catch {
+    // not JSON — use as-is
+  }
+  return message
+}
+
+function respond(event: H3Event, status: number, body: Record<string, unknown>) {
   setResponseStatus(event, status)
   setResponseHeaders(event, SECURITY_HEADERS)
   return send(event, JSON.stringify(body))
@@ -26,66 +40,66 @@ function respond(event: Parameters<typeof setResponseStatus>[0], status: number,
 
 export default defineNitroErrorHandler((error, event) => {
   const instance = getRequestURL(event).pathname
+  // scope may be undefined if the error fires before middleware/00.context.ts runs.
+  const reqId = event.context.scope?.reqId
+  const reqIdField = reqId ? { requestId: reqId } : {}
 
-  // Route handler explicitly converted a domain error to an h3 error with problem data.
-  // This is the preferred path for endpoint-specific error codes.
+  // 1) Route handler used createError({ data: { type, title?, why?, fix? } }) to
+  //    explicitly map an endpoint-specific code. Preferred path.
   const data = error.data as Record<string, unknown> | undefined
-  if (isError(error) && typeof data?.type === 'string') {
+  if (typeof data?.type === 'string') {
     return respond(event, error.statusCode, {
       type: data.type,
       title: data.title ?? 'Error',
       status: error.statusCode,
       detail: error.message,
       instance,
+      ...reqIdField,
       ...(data.why ? { why: data.why } : {}),
       ...(data.fix ? { fix: data.fix } : {})
     })
   }
 
-  // Domain error reached without being explicitly caught by a route handler.
-  // Only works when the ApplicationError/AdapterError has no inner cause — h3
-  // otherwise unwraps the cause and the domain error reference is lost.
-  const rawCause = error.cause
-  if (
-    typeof rawCause === 'object'
-    && rawCause !== null
-    && 'name' in rawCause
-    && 'code' in rawCause
-    && ((rawCause as { name: unknown }).name === 'ApplicationError' || (rawCause as { name: unknown }).name === 'AdapterError')
-    && typeof (rawCause as { code: unknown }).code === 'string'
-  ) {
-    const code = (rawCause as { code: string }).code as ErrorCode
-    const entry = GENERIC_CATALOG[code]
+  // 2) An AppError reached the global handler without explicit route mapping.
+  //    findAppError walks the cause chain so detection is robust to h3 wrapping.
+  const appError = findAppError(error)
+  if (appError) {
+    const entry = GENERIC_CATALOG[appError.code]
     if (entry) {
-      const e = rawCause as unknown as { message: string, why?: string, fix?: string }
       return respond(event, entry.status, {
-        type: code,
+        type: appError.code,
         title: entry.title,
         status: entry.status,
-        detail: e.message,
+        detail: appError.message,
         instance,
-        ...(e.why ? { why: e.why } : {}),
-        ...(e.fix ? { fix: e.fix } : {})
+        ...reqIdField,
+        ...(appError.why ? { why: appError.why } : {}),
+        ...(appError.fix ? { fix: appError.fix } : {})
       })
     }
+    // AppError with an endpoint-specific code that escaped route mapping.
+    // This is a bug; fall through to the 500 catch-all. Nitro logs the trace.
   }
 
-  // h3 validation/client errors (e.g. from getValidatedRouterParams).
-  if (isError(error) && error.statusCode >= 400 && error.statusCode < 500) {
+  // 3) h3 client errors (validation, body parse, missing route, etc.).
+  if (error.statusCode >= 400 && error.statusCode < 500) {
     return respond(event, error.statusCode, {
       type: 'urn:archimulant:invalid-input',
       title: 'Invalid Input',
       status: error.statusCode,
-      detail: error.message,
-      instance
+      detail: extractDetail(error.message),
+      instance,
+      ...reqIdField
     })
   }
 
-  // Catch-all: unknown or unhandled server errors. No internal detail is leaked.
+  // 4) Catch-all for unknown server errors. No internal detail is leaked.
   return respond(event, 500, {
     type: 'urn:archimulant:internal-error',
     title: 'Internal Server Error',
     status: 500,
-    instance
+    detail: extractDetail(error.message),
+    instance,
+    ...reqIdField
   })
 })

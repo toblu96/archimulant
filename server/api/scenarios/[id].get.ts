@@ -1,12 +1,21 @@
-import { z } from 'zod'
-import { getScenario } from '~~/server/application/scenarios/getScenario'
-import { scenarioRepository } from '~~/server/adapters/scenarios/FileScenarioRepository'
-import { ApplicationError } from '~~/server/utils/errors'
+import { getScenario } from '~~/server/application/scenarios/get-scenario.usecase'
+import { AppError } from '~~/server/domain/errors'
+import { ScenarioIdSchema } from '~~/server/domain/scenario/scenario'
+import * as z from 'zod'
+
+const metricsSchema = {
+  type: 'object',
+  properties: {
+    availability: { type: 'number', minimum: 0, maximum: 100 },
+    throughputRps: { type: 'number' },
+    latencyMs: { type: 'number' }
+  }
+} as const
 
 defineRouteMeta({
   openAPI: {
     tags: ['Scenarios'],
-    description: 'Returns the full scenario definition including topology, improvements, and computed baseline metrics.',
+    description: 'Returns a scenario with its topology and computed baseline metrics.',
     parameters: [
       {
         in: 'path',
@@ -19,25 +28,47 @@ defineRouteMeta({
     ],
     responses: {
       200: {
-        description: 'Full scenario with computed baseline metrics.',
+        description: 'Scenario with nodes, edges, target metrics, and computed baseline metrics.',
         content: {
           'application/json': {
             schema: {
               type: 'object',
               properties: {
                 id: { type: 'string' },
-                meta: { type: 'object' },
-                budget: { type: 'object' },
-                targetMetrics: { type: 'object' },
-                baselineMetrics: {
+                meta: {
                   type: 'object',
                   properties: {
-                    availability: { type: 'number' },
-                    p99LatencyMillis: { type: 'number' },
-                    requestsPerSecond: { type: 'number' }
+                    title: { type: 'string' },
+                    description: { type: 'string' },
+                    difficulty: { type: 'string', enum: ['beginner', 'intermediate', 'advanced'] },
+                    tags: { type: 'array', items: { type: 'string' } },
+                    estimatedMinutes: { type: 'number' }
                   }
                 },
-                topology: { type: 'object' },
+                topology: {
+                  type: 'object', properties: {
+                    nodes: { type: 'array' },
+                    edges: { type: 'array' }
+                  }
+                },
+                budget: {
+                  type: 'object', properties: {
+                    yearlyOperational: {
+                      type: 'object', properties: {
+                        limit: { type: 'number' },
+                        baselineCost: { type: 'number' }
+                      }
+                    },
+                    oneTimeInvestment: {
+                      type: 'object', properties: {
+                        limit: { type: 'number' },
+                        baselineCost: { type: 'number' }
+                      }
+                    }
+                  }
+                },
+                targetMetrics: metricsSchema,
+                actualMetrics: metricsSchema,
                 improvements: { type: 'array' }
               }
             }
@@ -45,7 +76,7 @@ defineRouteMeta({
         }
       },
       400: {
-        description: 'The path parameter did not pass validation.',
+        description: 'Invalid input parameter.',
         content: {
           'application/problem+json': {
             schema: {
@@ -61,8 +92,8 @@ defineRouteMeta({
                   type: 'urn:archimulant:invalid-input',
                   title: 'Invalid Input',
                   status: 400,
-                  detail: 'Too small: expected string to have >=1 characters',
-                  instance: '/api/scenarios/%20'
+                  detail: 'Invalid scenario id: my scenario',
+                  instance: '/api/scenarios/my%20scenario'
                 }
               }
             }
@@ -86,9 +117,9 @@ defineRouteMeta({
                   type: 'urn:archimulant:scenario-not-found',
                   title: 'Scenario Not Found',
                   status: 404,
-                  detail: 'Scenario not found: ecommerce-peak-traffic',
+                  detail: 'Scenario ecommerce-peak-traffic not found',
                   instance: '/api/scenarios/ecommerce-peak-traffic',
-                  fix: 'Use GET /api/scenarios to retrieve available scenario identifiers.'
+                  fix: 'Check the id or call GET /scenarios to list available ones'
                 }
               }
             }
@@ -116,24 +147,19 @@ defineRouteMeta({
 export default defineEventHandler(async (event) => {
   const { id } = await getValidatedRouterParams(
     event,
-    data => z.object({ id: z.string().trim().min(1) }).parse(data)
+    data => z.object({ id: ScenarioIdSchema }).parse(data)
   )
 
   try {
-    const scenario = await getScenario(scenarioRepository, id)
-    return { data: scenario }
-  } catch (error) {
-    if (error instanceof ApplicationError && error.code === 'urn:archimulant:scenario-not-found') {
+    return await getScenario(event.context.scope, id)
+  } catch (err) {
+    if (err instanceof AppError && err.code === 'urn:archimulant:scenario-not-found') {
       throw createError({
         statusCode: 404,
-        message: error.message,
-        data: {
-          type: 'urn:archimulant:scenario-not-found',
-          title: 'Scenario Not Found',
-          ...(error.fix ? { fix: error.fix } : {})
-        }
+        statusMessage: err.message,
+        data: { type: err.code, title: 'Scenario Not Found', fix: err.fix }
       })
     }
-    throw error
+    throw err
   }
 })
