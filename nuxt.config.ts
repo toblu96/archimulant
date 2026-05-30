@@ -1,3 +1,8 @@
+declare module 'nitropack/types' {
+  interface NitroRouteRules { auth?: boolean }
+  interface NitroRouteConfig { auth?: boolean }
+}
+
 export default defineNuxtConfig({
   modules: ['@nuxt/eslint', '@nuxt/ui', 'evlog/nuxt'],
   devtools: {
@@ -24,6 +29,13 @@ export default defineNuxtConfig({
       asyncContext: true
     },
     errorHandler: '~~/server/error'
+  },
+  vite: {
+    optimizeDeps: {
+      include: [
+        'better-auth/vue'
+      ]
+    }
   },
   eslint: {
     config: {

@@ -22,7 +22,7 @@ const providers = ref<ButtonProps[]>([
     icon: 'i-simple-icons-google',
     color: 'neutral',
     variant: 'subtle',
-    onClick: () => { authClient.signIn.social({ provider: 'google' }) },
+    onClick: () => { authClient.signIn.social({ provider: 'google', callbackURL: callbackURL.value }) },
     disabled: true
   }
 ])
