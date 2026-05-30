@@ -3,6 +3,8 @@ export type ErrorCode
     | 'urn:archimulant:invalid-scenario-id'
     | 'urn:archimulant:invalid-input'
     | 'urn:archimulant:internal-error'
+    | 'urn:archimulant:unauthorized' // no session
+    | 'urn:archimulant:forbidden' // session, but not allowed
 
 export interface AppErrorOptions {
   cause?: unknown

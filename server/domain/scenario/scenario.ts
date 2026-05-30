@@ -108,6 +108,6 @@ export const ScenarioSchema = z.object({
 })
 export type Scenario = z.infer<typeof ScenarioSchema>
 
-// ScenarioSummary is a domain projection — pick keeps it in sync with Scenario automatically.
+// ScenarioSummary is a domain projection — omit keeps it in sync with Scenario automatically.
 export const ScenarioSummarySchema = ScenarioSchema.omit({ budget: true, topology: true, improvements: true })
 export type ScenarioSummary = z.infer<typeof ScenarioSummarySchema>

@@ -8,6 +8,8 @@ import { findAppError, type ErrorCode } from '~~/server/domain/errors'
  */
 const GENERIC_CATALOG: Partial<Record<ErrorCode, { title: string, status: number }>> = {
   'urn:archimulant:invalid-input': { title: 'Invalid Input', status: 400 },
+  'urn:archimulant:unauthorized': { title: 'Unauthorized', status: 401 },
+  'urn:archimulant:forbidden': { title: 'Forbidden', status: 403 },
   'urn:archimulant:internal-error': { title: 'Internal Server Error', status: 500 }
 }
 

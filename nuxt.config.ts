@@ -5,10 +5,17 @@ export default defineNuxtConfig({
   },
   css: ['~/assets/css/main.css'],
   runtimeConfig: {
-    scenariosDir: 'server/data/scenarios'
+    scenariosDir: 'server/data/scenarios',
+    auth: {
+      autoMigrate: true,
+      google: { clientId: '', clientSecret: '' },
+      github: { clientId: '', clientSecret: '' },
+      database: { filePath: '.data/auth.db' }
+    }
   },
   routeRules: {
-    '/': { prerender: true }
+    '/': { prerender: true },
+    '/api/auth/**': { auth: false }
   },
   compatibilityDate: '2025-01-15',
   nitro: {

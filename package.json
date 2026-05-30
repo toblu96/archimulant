@@ -8,12 +8,16 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
-    "typecheck": "nuxt typecheck"
+    "typecheck": "nuxt typecheck",
+    "auth:generate": "npx auth@latest generate --config ./server/adapters/better-auth.ts --yes",
+    "auth:migrate": "npx auth@latest migrate  --config ./server/adapters/better-auth.ts --yes"
   },
   "dependencies": {
     "@iconify-json/lucide": "^1.2.106",
     "@iconify-json/simple-icons": "^1.2.81",
     "@nuxt/ui": "^4.7.1",
+    "better-auth": "^1.6.11",
+    "better-sqlite3": "^12.10.0",
     "evlog": "^2.17.0",
     "nuxt": "^4.4.5",
     "tailwindcss": "^4.3.0",
@@ -21,10 +25,11 @@
   },
   "devDependencies": {
     "@nuxt/eslint": "^1.15.2",
+    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^25.8.0",
     "eslint": "^10.3.0",
     "typescript": "^6.0.3",
     "vue-tsc": "^3.2.8"
   },
-  "packageManager": "pnpm@10.33.4"
+  "packageManager": "pnpm@11.1.2"
 }

@@ -1,5 +1,24 @@
+<script setup lang="ts">
+import { signOut, authClient } from '~~/lib/auth-client'
+
+definePageMeta({
+  auth: false
+})
+
+const { data: session } = await authClient.useSession(useFetch)
+
+const logout = async () => {
+  await signOut()
+  navigateTo('/login')
+}
+</script>
+
 <template>
   <div>
+    <div>{{ session }}</div>
+    <UButton @click="logout()">
+      Sign out
+    </UButton>
     <UPageHero
       title="Nuxt Starter Template"
       description="A production-ready starter template powered by Nuxt UI. Build beautiful, accessible, and performant applications in minutes, not hours."
