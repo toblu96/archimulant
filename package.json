@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev",
+    "dev": "TMPDIR=/tmp nuxt dev",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
@@ -15,11 +15,12 @@
   "dependencies": {
     "@iconify-json/lucide": "^1.2.111",
     "@iconify-json/simple-icons": "^1.2.85",
-    "@nuxt/ui": "^4.8.1",
+    "@nuxt/ui": "^4.8.2",
+    "@vue-flow/core": "^1.48.2",
     "better-auth": "^1.6.14",
     "better-sqlite3": "^12.10.0",
     "evlog": "^2.18.1",
-    "nuxt": "^4.4.6",
+    "nuxt": "^4.4.7",
     "tailwindcss": "^4.3.0",
     "zod": "^4.4.3"
   },

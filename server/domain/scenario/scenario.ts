@@ -39,6 +39,7 @@ export const NodeSchema = z.object({
   id: z.string().min(1),
   label: z.string(),
   type: z.enum(['person', 'service', 'database', 'gateway', 'externalSystem']),
+  position: z.object({ x: z.number(), y: z.number() }),
   metrics: MetricsSchema
 })
 export type Node = z.infer<typeof NodeSchema>

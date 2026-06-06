@@ -89,6 +89,28 @@ When `game` layout is active on mobile, the three panels (canvas, improvements, 
 
 Auth-gated features (creating scenarios, hosting tournaments) are described in the features section but the CTA leads to Dashboard which handles auth redirect.
 
+## Game view
+
+**Simulation model** (`composables/useGameSimulation.ts`):
+- Availability: product of all non-person node availabilities × 100
+- Latency: sum of all non-person node latencies + all edge latencies
+- Throughput: min of all non-person node throughputs + all edge throughputs
+- Improvements are additive deltas, availability clamped to [0,1]
+- Improvements are toggleable (remove button on applied list)
+
+**VueFlow integration** (`components/game/FlowNode.vue`):
+- Nodes use custom `FlowNode` component for all node types (person, service, database, gateway, externalSystem)
+- Edges styled with `smoothstep` type, animated when an improvement targets the edge
+- Canvas is read-only (no new connections, no edge updates), node dragging allowed
+
+**Game layout panels**:
+- Left (264px): `MetricsPanel` — current vs target metrics, two budget progress bars (yearly operational + one-time), scenario description
+- Center (flex): VueFlow canvas wrapped in `<ClientOnly>`
+- Right (288px): `ImprovementsPanel` — available improvements with apply button, applied improvements with remove button
+- Mobile: bottom tab bar (Canvas | Metrics | Improve)
+
+**Win condition**: all target metrics met AND both budget limits not exceeded → `UModal` overlay
+
 ---
 
-*Updated: 2026-06-06. Covers landing page implementation. Game, dashboard layouts TBD.*
+*Updated: 2026-06-06. Landing page + play pages + game view implemented.*

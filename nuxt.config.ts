@@ -8,7 +8,7 @@ export default defineNuxtConfig({
   devtools: {
     enabled: true
   },
-  css: ['~/assets/css/main.css'],
+  css: ['~/assets/css/main.css', '@vue-flow/core/dist/style.css'],
   runtimeConfig: {
     scenariosDir: 'server/data/scenarios',
     auth: {
@@ -19,8 +19,7 @@ export default defineNuxtConfig({
     }
   },
   routeRules: {
-    '/': { prerender: true },
-    '/api/auth/**': { auth: false }
+    '/': { prerender: true }
   },
   compatibilityDate: '2025-01-15',
   nitro: {
@@ -33,7 +32,8 @@ export default defineNuxtConfig({
   vite: {
     optimizeDeps: {
       include: [
-        'better-auth/vue'
+        'better-auth/vue',
+        '@vue-flow/core'
       ]
     }
   },

@@ -33,21 +33,26 @@ const links = [
           {{ link.label }}
         </UButton>
         <UColorModeButton />
-        <UButton
-          v-if="!session"
-          to="/login"
-          size="sm"
-        >
-          Sign in
-        </UButton>
-        <UButton
-          v-else
-          to="/dashboard"
-          size="sm"
-          variant="soft"
-        >
-          Dashboard
-        </UButton>
+        <ClientOnly>
+          <UButton
+            v-if="!session"
+            to="/login"
+            size="sm"
+          >
+            Sign in
+          </UButton>
+          <UButton
+            v-else
+            to="/dashboard"
+            size="sm"
+            variant="soft"
+          >
+            Dashboard
+          </UButton>
+          <template #fallback>
+            <div class="w-20 h-8" />
+          </template>
+        </ClientOnly>
       </template>
     </UHeader>
 
