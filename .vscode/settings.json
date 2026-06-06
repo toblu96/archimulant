@@ -1,0 +1,7 @@
+{
+  // enable format-on-save for eslint stylistic - https://eslint.style/guide/faq#how-to-auto-format-on-save
+    "editor.formatOnSave": false,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+    }
+}
