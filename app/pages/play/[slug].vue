@@ -144,7 +144,7 @@ watch(isWon, (won) => {
         <div class="flex-1 min-h-0 overflow-hidden">
           <div
             v-if="activeTab === 'canvas'"
-            class="flex-1 relative min-w-0"
+            class="h-full"
           >
             <ClientOnly>
               <VueFlow
