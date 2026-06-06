@@ -28,7 +28,6 @@ const links = [
           :to="link.to"
           variant="ghost"
           color="neutral"
-          size="sm"
         >
           {{ link.label }}
         </UButton>
@@ -37,14 +36,12 @@ const links = [
           <UButton
             v-if="!session"
             to="/login"
-            size="sm"
           >
             Sign in
           </UButton>
           <UButton
             v-else
             to="/dashboard"
-            size="sm"
             variant="soft"
           >
             Dashboard

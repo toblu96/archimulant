@@ -21,7 +21,6 @@ function formatEffect(key: keyof GameMetrics, value: number): string {
 }
 
 function effectColor(key: keyof GameMetrics, value: number): string {
-  // positive availability/throughput = good; negative latency/failRate = good
   const isGood = (['availability', 'throughputRps', 'requestsPerSecond'] as string[]).includes(key)
     ? value > 0
     : value < 0
@@ -48,27 +47,27 @@ function formatCost(imp: GameImprovement): string {
   <div class="flex flex-col gap-4 p-4 h-full overflow-y-auto">
     <!-- Available improvements -->
     <div>
-      <p class="text-xs font-semibold uppercase tracking-wider text-muted mb-2">
+      <p class="text-xs font-semibold uppercase tracking-wider text-muted mb-3">
         Available ({{ available.length }})
       </p>
 
       <div
         v-if="available.length === 0"
-        class="text-xs text-muted text-center py-4"
+        class="text-sm text-muted text-center py-6"
       >
         All improvements applied
       </div>
 
-      <div class="flex flex-col gap-2">
+      <div class="flex flex-col gap-3">
         <div
           v-for="imp in available"
           :key="imp.id"
           class="rounded-lg border border-default bg-elevated p-3"
         >
-          <div class="flex items-start justify-between gap-2 mb-1">
-            <span class="text-xs font-medium text-default leading-tight">{{ imp.title }}</span>
+          <div class="flex items-start justify-between gap-2 mb-2">
+            <span class="text-sm font-medium text-default leading-snug">{{ imp.title }}</span>
             <UButton
-              size="xs"
+              size="sm"
               icon="i-lucide-plus"
               color="primary"
               variant="soft"
@@ -79,23 +78,23 @@ function formatCost(imp: GameImprovement): string {
 
           <p
             v-if="imp.description"
-            class="text-[11px] text-muted leading-relaxed mb-2"
+            class="text-xs text-muted leading-relaxed mb-3"
           >
             {{ imp.description }}
           </p>
 
-          <div class="flex flex-wrap items-center gap-1.5 justify-between">
-            <div class="flex flex-wrap gap-1">
+          <div class="flex flex-wrap items-center gap-2 justify-between">
+            <div class="flex flex-wrap gap-1.5">
               <span
                 v-for="effect in getEffects(imp)"
                 :key="effect.label"
-                class="text-[10px] font-mono"
+                class="text-xs font-mono font-medium"
                 :class="effect.color"
               >
                 {{ effect.label }}
               </span>
             </div>
-            <span class="text-[10px] text-muted font-mono shrink-0">
+            <span class="text-xs text-muted font-mono shrink-0">
               {{ formatCost(imp) }}
             </span>
           </div>
@@ -107,26 +106,26 @@ function formatCost(imp: GameImprovement): string {
 
     <!-- Applied improvements -->
     <div v-if="applied.length > 0">
-      <p class="text-xs font-semibold uppercase tracking-wider text-muted mb-2">
+      <p class="text-xs font-semibold uppercase tracking-wider text-muted mb-3">
         Applied ({{ applied.length }})
       </p>
 
-      <div class="flex flex-col gap-2">
+      <div class="flex flex-col gap-3">
         <div
           v-for="imp in applied"
           :key="imp.id"
           class="rounded-lg border border-(--ui-primary)/50 bg-(--ui-primary)/5 p-3"
         >
-          <div class="flex items-center justify-between gap-2">
-            <div class="flex items-center gap-1.5 min-w-0">
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <div class="flex items-center gap-2 min-w-0">
               <UIcon
                 name="i-lucide-check-circle"
-                class="size-3.5 text-primary shrink-0"
+                class="size-4 text-primary shrink-0"
               />
-              <span class="text-xs font-medium text-default truncate">{{ imp.title }}</span>
+              <span class="text-sm font-medium text-default truncate">{{ imp.title }}</span>
             </div>
             <UButton
-              size="xs"
+              size="sm"
               icon="i-lucide-x"
               color="neutral"
               variant="ghost"
@@ -135,18 +134,18 @@ function formatCost(imp: GameImprovement): string {
             />
           </div>
 
-          <div class="flex flex-wrap items-center gap-1.5 justify-between mt-1.5">
-            <div class="flex flex-wrap gap-1">
+          <div class="flex flex-wrap items-center gap-2 justify-between">
+            <div class="flex flex-wrap gap-1.5">
               <span
                 v-for="effect in getEffects(imp)"
                 :key="effect.label"
-                class="text-[10px] font-mono"
+                class="text-xs font-mono font-medium"
                 :class="effect.color"
               >
                 {{ effect.label }}
               </span>
             </div>
-            <span class="text-[10px] text-muted font-mono shrink-0">
+            <span class="text-xs text-muted font-mono shrink-0">
               {{ formatCost(imp) }}
             </span>
           </div>

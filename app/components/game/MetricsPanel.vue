@@ -69,7 +69,7 @@ const setupBudgetPct = computed(() =>
 </script>
 
 <template>
-  <div class="flex flex-col gap-4 p-4 h-full overflow-y-auto">
+  <div class="flex flex-col gap-5 p-4 h-full overflow-y-auto">
     <!-- Win banner -->
     <UAlert
       v-if="isWon"
@@ -82,32 +82,30 @@ const setupBudgetPct = computed(() =>
 
     <!-- Metrics -->
     <div>
-      <p class="text-xs font-semibold uppercase tracking-wider text-muted mb-2">
+      <p class="text-xs font-semibold uppercase tracking-wider text-muted mb-3">
         Metrics
       </p>
       <div class="flex flex-col gap-2">
         <div
           v-for="row in metricRows"
           :key="row.label"
-          class="flex items-start justify-between gap-2 rounded-lg border border-default bg-elevated p-2.5"
+          class="rounded-lg border border-default bg-elevated p-3"
         >
-          <div class="flex items-center gap-1.5 min-w-0">
+          <div class="flex items-center gap-2 mb-2">
             <UIcon
               :name="row.icon"
-              class="size-3.5 shrink-0 text-muted"
+              class="size-4 shrink-0 text-muted"
             />
-            <span class="text-xs text-muted truncate">{{ row.label }}</span>
+            <span class="text-sm font-medium text-default">{{ row.label }}</span>
+            <UIcon
+              :name="row.met ? 'i-lucide-check-circle' : 'i-lucide-x-circle'"
+              class="size-4 ml-auto shrink-0"
+              :class="row.met ? 'text-success-500' : 'text-error-500'"
+            />
           </div>
-          <div class="flex flex-col items-end gap-0.5 shrink-0">
-            <span class="text-xs font-mono font-semibold text-default">{{ row.current }}</span>
-            <div class="flex items-center gap-1">
-              <span class="text-[10px] text-muted">{{ row.target }}</span>
-              <UIcon
-                :name="row.met ? 'i-lucide-check-circle' : 'i-lucide-x-circle'"
-                class="size-3"
-                :class="row.met ? 'text-success-500' : 'text-error-500'"
-              />
-            </div>
+          <div class="flex items-baseline justify-between gap-2">
+            <span class="text-xl font-mono font-semibold text-default">{{ row.current }}</span>
+            <span class="text-sm text-muted">{{ row.target }}</span>
           </div>
         </div>
       </div>
@@ -117,22 +115,22 @@ const setupBudgetPct = computed(() =>
 
     <!-- Budget -->
     <div>
-      <p class="text-xs font-semibold uppercase tracking-wider text-muted mb-2">
+      <p class="text-xs font-semibold uppercase tracking-wider text-muted mb-3">
         Budget
       </p>
-      <div class="flex flex-col gap-3">
+      <div class="flex flex-col gap-4">
         <!-- Yearly operational -->
         <div>
-          <div class="flex items-center justify-between mb-1">
-            <span class="text-xs text-muted">Running cost</span>
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-sm text-muted">Running cost</span>
             <span
-              class="text-xs font-mono"
-              :class="yearlyOperationalCost > scenario.budget.yearlyOperational.limit ? 'text-error-500 font-semibold' : 'text-default'"
+              class="text-sm font-mono font-medium"
+              :class="yearlyOperationalCost > scenario.budget.yearlyOperational.limit ? 'text-error-500' : 'text-default'"
             >
               ${{ yearlyOperationalCost.toLocaleString('en-US') }} / ${{ scenario.budget.yearlyOperational.limit.toLocaleString('en-US') }}/yr
             </span>
           </div>
-          <div class="h-1.5 rounded-full bg-elevated overflow-hidden">
+          <div class="h-2 rounded-full bg-elevated overflow-hidden">
             <div
               class="h-full rounded-full transition-all"
               :class="yearlyOperationalCost > scenario.budget.yearlyOperational.limit ? 'bg-error-500' : 'bg-primary'"
@@ -143,16 +141,16 @@ const setupBudgetPct = computed(() =>
 
         <!-- One-time investment -->
         <div>
-          <div class="flex items-center justify-between mb-1">
-            <span class="text-xs text-muted">Setup cost</span>
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-sm text-muted">Setup cost</span>
             <span
-              class="text-xs font-mono"
-              :class="oneTimeCost > scenario.budget.oneTimeInvestment.limit ? 'text-error-500 font-semibold' : 'text-default'"
+              class="text-sm font-mono font-medium"
+              :class="oneTimeCost > scenario.budget.oneTimeInvestment.limit ? 'text-error-500' : 'text-default'"
             >
               ${{ oneTimeCost.toLocaleString('en-US') }} / ${{ scenario.budget.oneTimeInvestment.limit.toLocaleString('en-US') }}
             </span>
           </div>
-          <div class="h-1.5 rounded-full bg-elevated overflow-hidden">
+          <div class="h-2 rounded-full bg-elevated overflow-hidden">
             <div
               class="h-full rounded-full transition-all"
               :class="oneTimeCost > scenario.budget.oneTimeInvestment.limit ? 'bg-error-500' : 'bg-primary'"
@@ -169,14 +167,13 @@ const setupBudgetPct = computed(() =>
       <p class="text-xs font-semibold uppercase tracking-wider text-muted mb-2">
         Scenario
       </p>
-      <p class="text-xs text-muted leading-relaxed">
+      <p class="text-sm text-muted leading-relaxed">
         {{ scenario.meta.description }}
       </p>
-      <div class="flex flex-wrap gap-1 mt-2">
+      <div class="flex flex-wrap gap-1.5 mt-3">
         <UBadge
           v-for="tag in scenario.meta.tags"
           :key="tag"
-          size="xs"
           color="neutral"
           variant="soft"
         >

@@ -4,7 +4,7 @@
       <template #left>
         <NuxtLink
           to="/"
-          class="font-semibold text-sm tracking-tight text-highlighted"
+          class="font-semibold text-base tracking-tight text-highlighted"
         >
           Archimulant
         </NuxtLink>
@@ -15,10 +15,9 @@
           to="/play"
           variant="ghost"
           color="neutral"
-          size="sm"
-          icon="i-lucide-arrow-left"
+          icon="i-tabler-door-exit"
         >
-          Exit
+          Exit Scenario
         </UButton>
       </template>
     </UHeader>

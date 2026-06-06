@@ -65,19 +65,19 @@ const borderClass = computed(() => {
     >
       <span
         v-if="data.metrics.availability !== undefined"
-        class="text-[10px] text-muted bg-elevated rounded px-1 py-0.5"
+        class="text-xs text-muted bg-elevated rounded px-1.5 py-0.5"
       >
         {{ (data.metrics.availability * 100).toFixed(1) }}%
       </span>
       <span
         v-if="data.metrics.throughputRps !== undefined"
-        class="text-[10px] text-muted bg-elevated rounded px-1 py-0.5"
+        class="text-xs text-muted bg-elevated rounded px-1.5 py-0.5"
       >
         {{ data.metrics.throughputRps }}↑
       </span>
       <span
         v-if="data.metrics.latencyMs !== undefined"
-        class="text-[10px] text-muted bg-elevated rounded px-1 py-0.5"
+        class="text-xs text-muted bg-elevated rounded px-1.5 py-0.5"
       >
         {{ data.metrics.latencyMs }}ms
       </span>
