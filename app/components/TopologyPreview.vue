@@ -2,24 +2,21 @@
   <div class="rounded-xl border border-default bg-elevated overflow-hidden shadow-lg select-none">
     <!-- Mini toolbar -->
     <div class="flex items-center justify-between px-4 py-2.5 border-b border-default bg-default">
-      <span class="text-xs font-mono text-muted">e-commerce-api</span>
+      <span class="text-xs font-mono text-muted">E-Commerce Peak Traffic</span>
       <div class="flex items-center gap-2">
         <UBadge
-          size="xs"
           color="success"
-          variant="soft"
+          variant="subtle"
         >
           99.2% avail
         </UBadge>
         <UBadge
-          size="xs"
           color="warning"
-          variant="soft"
+          variant="subtle"
         >
           184ms P95
         </UBadge>
         <UBadge
-          size="xs"
           color="neutral"
           variant="subtle"
         >
@@ -36,7 +33,6 @@
         class="w-full"
         aria-hidden="true"
       >
-        <!-- Grid background -->
         <defs>
           <pattern
             id="tp-grid"
@@ -52,20 +48,37 @@
               opacity="0.5"
             />
           </pattern>
+          <!-- Normal edge arrow -->
           <marker
             id="tp-arrow"
-            markerWidth="5"
-            markerHeight="4"
-            refX="5"
-            refY="2"
+            markerWidth="6"
+            markerHeight="5"
+            refX="6"
+            refY="2.5"
             orient="auto"
           >
             <path
-              d="M 0 0 L 5 2 L 0 4 z"
-              fill="var(--ui-border)"
+              d="M 0 0 L 6 2.5 L 0 5 z"
+              fill="var(--ui-text-muted)"
+              opacity="0.6"
+            />
+          </marker>
+          <!-- Primary edge arrow -->
+          <marker
+            id="tp-arrow-primary"
+            markerWidth="6"
+            markerHeight="5"
+            refX="6"
+            refY="2.5"
+            orient="auto"
+          >
+            <path
+              d="M 0 0 L 6 2.5 L 0 5 z"
+              fill="var(--ui-primary)"
             />
           </marker>
         </defs>
+
         <rect
           width="420"
           height="290"
@@ -73,67 +86,67 @@
         />
 
         <!-- Edges -->
-        <!-- Client → API Gateway -->
         <line
           x1="210"
           y1="52"
           x2="210"
-          y2="95"
-          stroke="var(--ui-border)"
+          y2="94"
+          stroke="var(--ui-text-muted)"
           stroke-width="1.5"
+          opacity="0.4"
           marker-end="url(#tp-arrow)"
         />
-        <!-- API Gateway → Auth Service -->
         <line
           x1="172"
           y1="131"
-          x2="105"
-          y2="175"
-          stroke="var(--ui-border)"
+          x2="107"
+          y2="174"
+          stroke="var(--ui-text-muted)"
           stroke-width="1.5"
+          opacity="0.4"
           marker-end="url(#tp-arrow)"
         />
-        <!-- API Gateway → Product Service -->
         <line
           x1="248"
           y1="131"
-          x2="315"
-          y2="175"
-          stroke="var(--ui-border)"
+          x2="323"
+          y2="174"
+          stroke="var(--ui-text-muted)"
           stroke-width="1.5"
+          opacity="0.4"
           marker-end="url(#tp-arrow)"
         />
-        <!-- Auth Service → PostgreSQL -->
         <line
           x1="93"
-          y1="214"
-          x2="182"
-          y2="252"
-          stroke="var(--ui-border)"
+          y1="211"
+          x2="185"
+          y2="251"
+          stroke="var(--ui-text-muted)"
           stroke-width="1.5"
+          opacity="0.4"
           marker-end="url(#tp-arrow)"
         />
-        <!-- Product Service → PostgreSQL -->
         <line
           x1="327"
-          y1="214"
-          x2="238"
-          y2="252"
-          stroke="var(--ui-border)"
+          y1="211"
+          x2="240"
+          y2="251"
+          stroke="var(--ui-text-muted)"
           stroke-width="1.5"
+          opacity="0.4"
           marker-end="url(#tp-arrow)"
         />
-        <!-- Product Service → Redis Cache -->
+        <!-- Redis Cache edge (improvement) -->
         <line
-          x1="340"
-          y1="214"
-          x2="355"
-          y2="252"
+          x1="338"
+          y1="211"
+          x2="352"
+          y2="251"
           stroke="var(--ui-primary)"
           stroke-width="1.5"
           stroke-dasharray="4 3"
-          marker-end="url(#tp-arrow)"
-          opacity="0.7"
+          marker-end="url(#tp-arrow-primary)"
+          opacity="0.8"
         />
 
         <!-- Client node -->
@@ -147,19 +160,21 @@
           stroke="var(--ui-border)"
           stroke-width="1"
         />
+        <g
+          transform="translate(204, 21) scale(0.5)"
+          stroke="var(--ui-text-muted)"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+        >
+          <path d="M3 5a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1zm4 15h10m-8-4v4m6-4v4" />
+        </g>
         <text
           x="210"
-          y="36"
+          y="45"
           text-anchor="middle"
           font-size="10"
-          font-family="inherit"
-          fill="var(--ui-text-muted)"
-        >🖥</text>
-        <text
-          x="210"
-          y="47"
-          text-anchor="middle"
-          font-size="9"
           font-family="inherit"
           fill="var(--ui-text-muted)"
         >Client</text>
@@ -175,19 +190,21 @@
           stroke="var(--ui-primary)"
           stroke-width="1.5"
         />
+        <g
+          transform="translate(204, 98) scale(0.5)"
+          stroke="var(--ui-primary)"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+        >
+          <path d="M12 3a12 12 0 0 0 8.5 3A12 12 0 0 1 12 21A12 12 0 0 1 3.5 6A12 12 0 0 0 12 3" />
+        </g>
         <text
           x="210"
-          y="113"
+          y="123"
           text-anchor="middle"
           font-size="10"
-          font-family="inherit"
-          fill="var(--ui-text)"
-        >⚡</text>
-        <text
-          x="210"
-          y="124"
-          text-anchor="middle"
-          font-size="9"
           font-family="inherit"
           fill="var(--ui-text)"
         >API Gateway</text>
@@ -203,19 +220,22 @@
           stroke="var(--ui-border)"
           stroke-width="1"
         />
+        <g
+          transform="translate(87, 178) scale(0.5)"
+          stroke="var(--ui-text-muted)"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+        >
+          <path d="M5 13a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z" />
+          <path d="M11 16a1 1 0 1 0 2 0a1 1 0 0 0-2 0m-3-5V7a4 4 0 1 1 8 0v4" />
+        </g>
         <text
           x="93"
-          y="193"
+          y="203"
           text-anchor="middle"
           font-size="10"
-          font-family="inherit"
-          fill="var(--ui-text-muted)"
-        >🔐</text>
-        <text
-          x="93"
-          y="204"
-          text-anchor="middle"
-          font-size="9"
           font-family="inherit"
           fill="var(--ui-text-muted)"
         >Auth Service</text>
@@ -231,19 +251,21 @@
           stroke="var(--ui-border)"
           stroke-width="1"
         />
+        <g
+          transform="translate(329, 178) scale(0.5)"
+          stroke="var(--ui-text-muted)"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+        >
+          <path d="M3 7a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v2a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3m0 6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v2a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3zm4-7v.01M7 16v.01" />
+        </g>
         <text
           x="335"
-          y="193"
+          y="203"
           text-anchor="middle"
           font-size="10"
-          font-family="inherit"
-          fill="var(--ui-text-muted)"
-        >📦</text>
-        <text
-          x="335"
-          y="204"
-          text-anchor="middle"
-          font-size="9"
           font-family="inherit"
           fill="var(--ui-text-muted)"
         >Product Service</text>
@@ -259,24 +281,28 @@
           stroke="var(--ui-border)"
           stroke-width="1"
         />
+        <g
+          transform="translate(204, 255) scale(0.5)"
+          stroke="var(--ui-text-muted)"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+        >
+          <path d="M4 6a8 3 0 1 0 16 0A8 3 0 1 0 4 6" />
+          <path d="M4 6v6a8 3 0 0 0 16 0V6" />
+          <path d="M4 12v6a8 3 0 0 0 16 0v-6" />
+        </g>
         <text
           x="210"
-          y="269"
+          y="278"
           text-anchor="middle"
           font-size="10"
           font-family="inherit"
           fill="var(--ui-text-muted)"
-        >🗄</text>
-        <text
-          x="210"
-          y="280"
-          text-anchor="middle"
-          font-size="9"
-          font-family="inherit"
-          fill="var(--ui-text-muted)"
         >PostgreSQL</text>
 
-        <!-- Redis Cache node (applied improvement — highlighted) -->
+        <!-- Redis Cache node (applied improvement) -->
         <rect
           x="318"
           y="252"
@@ -287,32 +313,30 @@
           stroke="var(--ui-primary)"
           stroke-width="1.5"
           stroke-dasharray="4 3"
-          opacity="0.85"
         />
+        <g
+          transform="translate(354, 255) scale(0.5)"
+          stroke="var(--ui-primary)"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+        >
+          <path d="M13 3v7h6l-8 11v-7H5z" />
+        </g>
         <text
           x="360"
-          y="269"
+          y="278"
           text-anchor="middle"
           font-size="10"
           font-family="inherit"
           fill="var(--ui-primary)"
-          opacity="0.85"
-        >⚡</text>
-        <text
-          x="360"
-          y="280"
-          text-anchor="middle"
-          font-size="9"
-          font-family="inherit"
-          fill="var(--ui-primary)"
-          opacity="0.85"
         >Redis Cache</text>
       </svg>
 
       <!-- Applied improvement label -->
-      <div class="absolute bottom-3 left-3 flex items-center gap-1.5">
+      <div class="absolute bottom-3 left-3">
         <UBadge
-          size="xs"
           color="primary"
           variant="soft"
           icon="i-lucide-plus-circle"

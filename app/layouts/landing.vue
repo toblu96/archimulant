@@ -1,37 +1,47 @@
 <script setup lang="ts">
 import { authClient } from '~~/lib/auth-client'
+import type { NavigationMenuItem } from '@nuxt/ui'
 
+const route = useRoute()
 const { data: session } = await authClient.useSession(useFetch)
 
-const links = [
-  { label: 'Play', to: '/play' },
-  { label: 'Learn', to: '/learn' }
-]
+const items = computed<NavigationMenuItem[]>(() => [
+  {
+    label: 'Play',
+    to: '/play',
+    active: route.path.startsWith('/play')
+  },
+  {
+    label: 'Learn',
+    to: '/learn',
+    active: route.path.startsWith('/learn')
+  }
+])
 </script>
 
 <template>
   <div>
     <UHeader>
-      <template #left>
-        <NuxtLink
-          to="/"
-          class="font-semibold text-base tracking-tight text-highlighted"
-        >
-          Archimulant
-        </NuxtLink>
+      <template #title>
+        Archimulant
       </template>
 
+      <UNavigationMenu :items="items" />
+
       <template #right>
-        <UButton
-          v-for="link in links"
-          :key="link.to"
-          :to="link.to"
-          variant="ghost"
-          color="neutral"
-        >
-          {{ link.label }}
-        </UButton>
         <UColorModeButton />
+        <UTooltip
+          text="Open on GitHub"
+        >
+          <UButton
+            color="neutral"
+            variant="ghost"
+            to="https://github.com/toblu96/archimulant"
+            target="_blank"
+            icon="i-simple-icons-github"
+            aria-label="GitHub"
+          />
+        </UTooltip>
         <ClientOnly>
           <UButton
             v-if="!session"
@@ -67,8 +77,8 @@ const links = [
       </template>
       <template #right>
         <UButton
-          v-for="link in links"
-          :key="link.to"
+          v-for="link in items"
+          :key="String(link.to ?? link.label)"
           :to="link.to"
           variant="ghost"
           color="neutral"

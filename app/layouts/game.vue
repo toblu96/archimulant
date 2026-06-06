@@ -1,13 +1,8 @@
 <template>
   <div class="flex flex-col h-dvh overflow-hidden">
     <UHeader class="flex-none">
-      <template #left>
-        <NuxtLink
-          to="/"
-          class="font-semibold text-base tracking-tight text-highlighted"
-        >
-          Archimulant
-        </NuxtLink>
+      <template #title>
+        Archimulant
       </template>
 
       <template #right>
