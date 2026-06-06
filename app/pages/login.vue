@@ -3,6 +3,7 @@ import type { ButtonProps } from '@nuxt/ui'
 import { authClient } from '~~/lib/auth-client'
 
 definePageMeta({
+  layout: 'auth',
   auth: false
 })
 
