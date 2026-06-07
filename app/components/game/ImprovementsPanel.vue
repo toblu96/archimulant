@@ -159,7 +159,7 @@ function formatCost(imp: GameImprovement): string {
 
           <div class="flex flex-col items-start justify-between gap-4">
             <!-- Per-target effects -->
-            <div class="flex flex-wrap items-center justify-between gap-4">
+            <div class="flex flex-col items-start justify-between gap-4">
               <div
                 v-for="target in getTargetEffects(imp, topologyLabels)"
                 :key="target.name"
