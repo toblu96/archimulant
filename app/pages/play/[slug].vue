@@ -96,7 +96,7 @@ watch(isWon, (won) => {
       <!-- Desktop: three-panel layout -->
       <div class="hidden md:flex h-full">
         <!-- Left panel: metrics -->
-        <aside class="w-64 flex-none border-r border-default overflow-hidden">
+        <aside class="w-80 flex-none border-r border-default overflow-hidden">
           <GameMetricsPanel
             :scenario="scenario"
             :system-metrics="systemMetrics"
@@ -117,7 +117,7 @@ watch(isWon, (won) => {
         </div>
 
         <!-- Right panel: improvements -->
-        <aside class="w-72 flex-none border-l border-default overflow-hidden">
+        <aside class="w-80 flex-none border-l border-default overflow-hidden">
           <GameImprovementsPanel
             :available="availableImprovements"
             :applied="appliedImprovements"

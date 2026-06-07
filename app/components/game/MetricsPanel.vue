@@ -131,41 +131,29 @@ const setupBudgetPct = computed(() =>
       <div class="flex flex-col gap-4">
         <!-- Yearly operational -->
         <div>
-          <div class="flex items-center justify-between mb-1.5">
+          <div class="flex flex-col items-start justify-between space-y-2">
             <span class="text-sm text-muted">Running cost</span>
+            <UProgress :model-value="opBudgetPct" />
             <span
-              class="text-sm font-mono font-medium"
+              class="text-sm font-mono font-medium self-end"
               :class="yearlyOperationalCost > scenario.budget.yearlyOperational.limit ? 'text-error-500' : 'text-default'"
             >
               ${{ yearlyOperationalCost.toLocaleString('en-US') }} / ${{ scenario.budget.yearlyOperational.limit.toLocaleString('en-US') }}/yr
             </span>
           </div>
-          <div class="h-2 rounded-full bg-elevated overflow-hidden">
-            <div
-              class="h-full rounded-full transition-all"
-              :class="yearlyOperationalCost > scenario.budget.yearlyOperational.limit ? 'bg-error-500' : 'bg-primary'"
-              :style="{ width: `${opBudgetPct}%` }"
-            />
-          </div>
         </div>
 
         <!-- One-time investment -->
         <div>
-          <div class="flex items-center justify-between mb-1.5">
+          <div class="flex flex-col items-start justify-between space-y-2">
             <span class="text-sm text-muted">Setup cost</span>
+            <UProgress :model-value="setupBudgetPct" />
             <span
-              class="text-sm font-mono font-medium"
+              class="text-sm font-mono font-medium self-end"
               :class="oneTimeCost > scenario.budget.oneTimeInvestment.limit ? 'text-error-500' : 'text-default'"
             >
-              ${{ oneTimeCost.toLocaleString('en-US') }} / ${{ scenario.budget.oneTimeInvestment.limit.toLocaleString('en-US') }}
+              ${{ oneTimeCost.toLocaleString('en-US') }} / ${{ scenario.budget.oneTimeInvestment.limit.toLocaleString('en-US') }}/yr
             </span>
-          </div>
-          <div class="h-2 rounded-full bg-elevated overflow-hidden">
-            <div
-              class="h-full rounded-full transition-all"
-              :class="oneTimeCost > scenario.budget.oneTimeInvestment.limit ? 'bg-error-500' : 'bg-primary'"
-              :style="{ width: `${setupBudgetPct}%` }"
-            />
           </div>
         </div>
       </div>
