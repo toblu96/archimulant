@@ -10,9 +10,23 @@ const signOut = async () => {
 </script>
 
 <template>
-  <div>
-    <UButton @click="signOut()">
-      Log Out
-    </UButton>
+  <div class="flex items-center justify-center p-4 pt-20">
+    <div class="w-full max-w-md">
+      <UAlert
+        title="🚧 Under construction.."
+        description="Features like tournament and creation of own scenarios are still under construction."
+        color="warning"
+        variant="subtle"
+        orientation="horizontal"
+        :actions="[
+          {
+            label: 'Log Out',
+            color: 'neutral',
+            variant: 'subtle',
+            onClick: () => signOut()
+          }
+        ]"
+      />
+    </div>
   </div>
 </template>
