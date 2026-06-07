@@ -48,7 +48,7 @@ const flowNodes = computed(() =>
 )
 
 const flowEdges = computed(() =>
-  simulatedEdges.value.map(edge => {
+  simulatedEdges.value.map((edge) => {
     const active = isTargetedByApplied(edge.id)
     return {
       id: edge.id,
@@ -62,6 +62,14 @@ const flowEdges = computed(() =>
     }
   })
 )
+
+const topologyLabels = computed<Record<string, string>>(() => {
+  if (!scenario.value) return {}
+  const map: Record<string, string> = {}
+  for (const n of scenario.value.topology.nodes) map[n.id] = n.label
+  for (const e of scenario.value.topology.edges) map[e.id] = e.label
+  return map
+})
 
 // Mobile tab
 const activeTab = ref('canvas')
@@ -112,6 +120,7 @@ watch(isWon, (won) => {
           <GameImprovementsPanel
             :available="availableImprovements"
             :applied="appliedImprovements"
+            :topology-labels="topologyLabels"
             @apply="apply"
             @remove="remove"
           />
@@ -153,6 +162,7 @@ watch(isWon, (won) => {
             <GameImprovementsPanel
               :available="availableImprovements"
               :applied="appliedImprovements"
+              :topology-labels="topologyLabels"
               @apply="apply"
               @remove="remove"
             />
