@@ -10,6 +10,7 @@ defineProps<{
 const emit = defineEmits<{
   apply: [id: string]
   remove: [id: string]
+  reset: []
 }>()
 
 function formatEffect(key: keyof GameMetrics, value: number): string {
@@ -116,9 +117,21 @@ function formatCost(imp: GameImprovement): string {
 
     <!-- Applied improvements -->
     <div v-if="applied.length > 0">
-      <p class="text-xs font-semibold uppercase tracking-wider text-muted mb-3">
-        Applied ({{ applied.length }})
-      </p>
+      <div class="flex items-center justify-between mb-3">
+        <p class="text-xs font-semibold uppercase tracking-wider text-muted">
+          Applied ({{ applied.length }})
+        </p>
+        <UTooltip text="Reset Scenario">
+          <UButton
+            size="sm"
+            icon="i-tabler-trash"
+            color="neutral"
+            variant="ghost"
+            class="shrink-0"
+            @click="emit('reset')"
+          />
+        </UTooltip>
+      </div>
 
       <div class="flex flex-col gap-3">
         <div

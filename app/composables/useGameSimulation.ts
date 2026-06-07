@@ -129,6 +129,10 @@ export function useGameSimulation(scenarioRef: MaybeRef<GameScenario | null>) {
     appliedIds.value = appliedIds.value.filter(x => x !== id)
   }
 
+  function reset() {
+    appliedIds.value = []
+  }
+
   const simulatedNodes = computed((): GameNode[] => {
     if (!scenario.value) return []
     return scenario.value.topology.nodes.map(node => ({
@@ -201,6 +205,7 @@ export function useGameSimulation(scenarioRef: MaybeRef<GameScenario | null>) {
     isWon,
     apply,
     remove,
+    reset,
     isTargetedByApplied
   }
 }

@@ -30,6 +30,7 @@ const {
   isWon,
   apply,
   remove,
+  reset,
   isTargetedByApplied
 } = useGameSimulation(scenario)
 
@@ -123,6 +124,7 @@ watch(isWon, (won) => {
             :topology-labels="topologyLabels"
             @apply="apply"
             @remove="remove"
+            @reset="reset"
           />
         </aside>
       </div>
@@ -165,6 +167,7 @@ watch(isWon, (won) => {
               :topology-labels="topologyLabels"
               @apply="apply"
               @remove="remove"
+              @reset="reset"
             />
           </div>
         </div>
