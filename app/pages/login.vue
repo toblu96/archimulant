@@ -8,7 +8,7 @@ definePageMeta({
 })
 
 const route = useRoute()
-const callbackURL = computed(() => (route.query.redirect as string | undefined) ?? '/')
+const callbackURL = computed(() => (route.query.redirect as string | undefined) ?? '/dashboard')
 
 const providers = ref<ButtonProps[]>([
   {
