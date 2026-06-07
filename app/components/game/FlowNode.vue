@@ -27,6 +27,12 @@ const iconMap: Record<string, string> = {
   externalSystem: 'i-tabler-world'
 }
 
+const metricIconMap: Record<string, string> = {
+  availability: 'i-tabler-shield-check',
+  throughputRps: 'i-tabler-activity',
+  latencyMs: 'i-tabler-stopwatch'
+}
+
 const isExternal = props.data.nodeType === 'externalSystem' || props.data.nodeType === 'person'
 
 const borderClass = computed(() => {
@@ -63,24 +69,33 @@ const borderClass = computed(() => {
       v-if="data.nodeType !== 'person'"
       class="flex flex-wrap gap-1"
     >
-      <span
+      <UBadge
         v-if="data.metrics.availability !== undefined"
-        class="text-xs text-muted bg-elevated rounded px-1.5 py-0.5"
+        color="neutral"
+        variant="soft"
+        size="xs"
+        :icon="metricIconMap.availability"
       >
         {{ (data.metrics.availability * 100).toFixed(1) }}%
-      </span>
-      <span
+      </UBadge>
+      <UBadge
         v-if="data.metrics.throughputRps !== undefined"
-        class="text-xs text-muted bg-elevated rounded px-1.5 py-0.5"
+        color="neutral"
+        variant="soft"
+        size="xs"
+        :icon="metricIconMap.throughputRps"
       >
-        {{ data.metrics.throughputRps }}↑
-      </span>
-      <span
+        {{ data.metrics.throughputRps }}
+      </UBadge>
+      <UBadge
         v-if="data.metrics.latencyMs !== undefined"
-        class="text-xs text-muted bg-elevated rounded px-1.5 py-0.5"
+        color="neutral"
+        variant="soft"
+        size="xs"
+        :icon="metricIconMap.latencyMs"
       >
         {{ data.metrics.latencyMs }}ms
-      </span>
+      </UBadge>
     </div>
 
     <div

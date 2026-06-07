@@ -34,13 +34,19 @@ const path = computed(() =>
   })
 )
 
+const metricIconMap: Record<string, string> = {
+  latencyMs: 'i-tabler-stopwatch',
+  bandwidthRps: 'i-tabler-activity',
+  failRate: 'i-tabler-cross'
+}
+
 const badges = computed(() => {
   const m = props.data?.metrics
   if (!m) return []
-  const result: { key: string, value: string }[] = []
-  if (m.latencyMs !== undefined) result.push({ key: 'latency', value: `${m.latencyMs}ms` })
-  if (m.bandwidthRps !== undefined) result.push({ key: 'bandwidth', value: `${m.bandwidthRps}↑` })
-  if (m.failRate !== undefined) result.push({ key: 'failRate', value: `${(m.failRate * 100).toFixed(1)}%↯` })
+  const result: { key: string, value: string, icon: string }[] = []
+  if (m.latencyMs !== undefined) result.push({ key: 'latency', value: `${m.latencyMs}ms`, icon: metricIconMap.latencyMs || 'i-tabler-box' })
+  if (m.bandwidthRps !== undefined) result.push({ key: 'bandwidth', value: `${m.bandwidthRps}↑`, icon: metricIconMap.bandwidthRps || 'i-tabler-box' })
+  if (m.failRate !== undefined) result.push({ key: 'failRate', value: `${(m.failRate * 100).toFixed(1)}%`, icon: metricIconMap.failRate || 'i-tabler-box' })
   return result
 })
 </script>
@@ -60,7 +66,7 @@ const badges = computed(() => {
       }"
       class="absolute text-center"
     >
-      <div class="flex">
+      <div class="flex flex-col">
         <div
           v-if="data.label"
           class="text-xs font-medium px-1.5 py-0.5 rounded bg-default/90 whitespace-nowrap transition-colors"
@@ -69,14 +75,18 @@ const badges = computed(() => {
           {{ data.label }}
         </div>
 
-        <UBadge
-          v-if="badges.length"
-          color="neutral"
-          variant="soft"
-          size="xs"
-        >
-          {{ badges.flatMap(badge => badge.value).join(' | ') }}
-        </UBadge>
+        <div class="flex gap-1">
+          <UBadge
+            v-for="badge in badges"
+            :key="badge.key"
+            color="neutral"
+            variant="soft"
+            size="xs"
+            :icon="badge.icon"
+          >
+            {{ badge.value }}
+          </UBadge>
+        </div>
       </div>
     </div>
   </EdgeLabelRenderer>

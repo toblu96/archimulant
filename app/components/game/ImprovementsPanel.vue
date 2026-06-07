@@ -26,7 +26,7 @@ function effectIcon(key: keyof GameMetrics): string {
   if (key === 'availability') return 'i-tabler-shield-check'
   if (key === 'throughputRps' || key === 'requestsPerSecond') return 'i-tabler-activity'
   if (key === 'latencyMs') return 'i-tabler-stopwatch'
-  if (key === 'failRate') return 'i-tabler-alert-triangle'
+  if (key === 'failRate') return 'i-tabler-cross'
   return 'i-tabler-activity'
 }
 function effectDescription(key: keyof GameMetrics): string {
