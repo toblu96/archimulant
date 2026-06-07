@@ -2,7 +2,7 @@
   "id": "microservices-cascade-failure",
   "meta": {
     "title": "Microservices Cascade Failure",
-    "description": "Your fintech platform uses a microservices architecture. When the Payment Service slows down under load, threads pile up in the Order Service waiting for responses — eventually bringing both services down. A slow dependency is taking out the whole system. Isolate the failure and keep the platform available.",
+    "description": "Your fintech platform uses a microservices architecture. When the Payment Service slows down under load, threads pile up in the Order Service waiting for responses - eventually bringing both services down. A slow dependency is taking out the whole system. Isolate the failure and keep the platform available.",
     "difficulty": "intermediate",
     "tags": [
       "circuit-breaker",
@@ -185,7 +185,7 @@
     {
       "id": "circuit-breaker-payment",
       "title": "Add Circuit Breaker on Payment Service",
-      "description": "Wrap calls to the Payment Service with a circuit breaker. When error rates exceed a threshold the circuit opens, failing fast instead of queueing threads — protecting the Order Service from cascading failure.",
+      "description": "Wrap calls to the Payment Service with a circuit breaker. When error rates exceed a threshold the circuit opens, failing fast instead of queueing threads - protecting the Order Service from cascading failure.",
       "learnMoreSlug": "circuit-breaker",
       "cost": { "yearlyOperational": 400, "oneTimeInvestment": 800 },
       "appliesTo": [

@@ -29,7 +29,7 @@ function extractDetail(message: string): string {
       return parsed[0].message
     }
   } catch {
-    // not JSON — use as-is
+    // not JSON - use as-is
   }
   return message
 }

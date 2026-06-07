@@ -10,7 +10,7 @@ export const createEvlogLoggerAdapter = (evlog: EvlogRequestLog): Logger => ({
 })
 
 // App-scoped: each log() call is a fire-and-forget structured event.
-// Uses evlog's simple log API (log.info), NOT createLogger — createLogger is
+// Uses evlog's simple log API (log.info), NOT createLogger - createLogger is
 // for accumulated wide events per unit of work, which is the wrong shape for
 // discrete lifecycle events. `defaults` merge into every emitted event.
 export const createEvlogAppLoggerAdapter = (

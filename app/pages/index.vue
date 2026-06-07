@@ -11,7 +11,7 @@ definePageMeta({
       orientation="horizontal"
       headline="Interactive Architecture Simulator"
       title="Think in systems. Design under pressure."
-      description="Apply architectural patterns to a live system topology and watch your decisions impact availability, latency, and cost — in real time, under a fixed budget."
+      description="Apply architectural patterns to a live system topology and watch your decisions impact availability, latency, cost in real time and under a fixed budget."
       :links="[
         {
           label: 'Try a scenario',
@@ -33,7 +33,7 @@ definePageMeta({
 
     <UPageSection
       title="How it works"
-      description="Archimulant makes software architecture tangible. No theory slides — just a system to improve and metrics that respond to every decision."
+      description="Archimulant makes software architecture tangible. No theory slides - just a system to improve and metrics that respond to every decision."
       :features="[
         {
           icon: 'i-tabler-heart-rate-monitor',
@@ -43,7 +43,7 @@ definePageMeta({
         {
           icon: 'i-tabler-school',
           title: 'Learn the patterns behind it',
-          description: 'Every improvement links to the architectural theory. Understand availability math, latency paths, and throughput bottlenecks — not just which button clicks.'
+          description: 'Every improvement links to the architectural theory. Understand availability math, latency paths, and throughput bottlenecks to truly understand what you click.'
         },
         {
           icon: 'i-tabler-trophy',

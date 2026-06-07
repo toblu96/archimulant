@@ -1,4 +1,4 @@
-# arc42 — Archimulant
+# arc42 - Archimulant
 
 > Architecture documentation following the arc42 template.
 >
@@ -52,7 +52,7 @@ Quality goals are aligned with **ISO 25010:2023** product quality characteristic
 
 | Priority | Characteristic                                         | Motivation                                                                                                                                  |
 | -------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1        | Interaction Capability · Learnability, User engagement | Simulation results must be intuitive and self-explanatory — pedagogical clarity takes precedence over simulation precision                  |
+| 1        | Interaction Capability · Learnability, User engagement | Simulation results must be intuitive and self-explanatory - pedagogical clarity takes precedence over simulation precision                  |
 | 2        | Performance Efficiency · Time behaviour                | Canvas interactions must render within 16ms; simulation feedback must appear within 200ms of a user action                                  |
 | 3        | Reliability · Availability, Fault tolerance            | Tournament sessions must remain stable and consistent for the full duration of a class or workshop (~60 min)                                |
 | 4        | Maintainability · Modifiability, Testability           | Content (scenarios, improvements, theory content) must be editable without code changes; simulation rules must be independently unit-testable |
@@ -77,7 +77,7 @@ Quality goals are aligned with **ISO 25010:2023** product quality characteristic
 | Constraint                                   | Background                                                       |
 | -------------------------------------------- | ---------------------------------------------------------------- |
 | Runs entirely in the browser (no native app) | Target audience uses desktop browsers; no app store distribution |
-| Self-hosted on homelab via Docker            | Portfolio project — no cloud cost; full control over deployment  |
+| Self-hosted on homelab via Docker            | Portfolio project - no cloud cost; full control over deployment  |
 | No native mobile support in v1               | Canvas interaction requires pointer precision; mobile deferred   |
 | Simulation logic must be deterministic       | Reproducible results required for fair tournament scoring        |
 
@@ -105,7 +105,7 @@ Quality goals are aligned with **ISO 25010:2023** product quality characteristic
 
 ```mermaid
 C4Context
-    title System Context — Archimulant
+    title System Context - Archimulant
     System(archimulant, "Archimulant", "Browser-based architecture simulation and learning game")
     Person(anon, "Anonymous Player", "Plays predefined scenarios and browses learn section without login")
     Person(student, "Architecture Student", "Registered user; creates custom scenarios and participates in tournaments")
@@ -132,7 +132,7 @@ C4Context
 
 ### Architectural Approach
 
-The simulation engine is the central kernel — a pure, stateless function that maps a `SystemDefinition` + applied `Improvements` to `QualityMetrics`. This function has no framework dependencies and is covered by unit tests independently of the UI.
+The simulation engine is the central kernel - a pure, stateless function that maps a `SystemDefinition` + applied `Improvements` to `QualityMetrics`. This function has no framework dependencies and is covered by unit tests independently of the UI.
 
 The backend manages tournament rooms and persists state. The frontend handles all rendering and local simulation feedback. For tournaments, the backend becomes the source of truth and pushes state updates via WebSocket.
 
@@ -140,11 +140,11 @@ The backend manages tournament rooms and persists state. The frontend handles al
 
 ## 5. Building Block View
 
-### 5.1 Level 2 — Container View
+### 5.1 Level 2 - Container View
 
 ```mermaid
 C4Container
-    title Container Diagram — Archimulant
+    title Container Diagram - Archimulant
     Person(anon, "Anonymous Player", "Plays predefined scenarios without login")
     Person(user, "Registered User / Host", "Creates scenarios, hosts or joins tournaments")
 
@@ -165,13 +165,13 @@ C4Container
     Rel(api, authProvider, "Authenticates hosts via", "OAuth 2.0")
 ```
 
-### 5.2 Level 3 — Backend API Components
+### 5.2 Level 3 - Backend API Components
 
 The backend follows a **hexagonal architecture** (Ports and Adapters). The application core contains all business logic and is isolated from infrastructure. Primary adapters drive the core from outside (REST, WebSocket); the DB Adapter implements the outbound persistence port. Authentication is handled directly by Better-Auth within the Auth Module, which integrates with Google OAuth without a separate adapter layer.
 
 ```mermaid
 C4Component
-    title Component Diagram — Backend API (Hexagonal Architecture)
+    title Component Diagram - Backend API (Hexagonal Architecture)
 
     Container_Boundary(api, "Backend API") {
         Component(httpAdapter, "HTTP Adapter", "Nitro / H3", "Primary adapter: receives REST requests and WebSocket connections, delegates to application use cases")
@@ -371,4 +371,4 @@ mindmap
 | **Participant**            | A user who has joined a tournament room under a chosen nickname without a registered account. Their applied improvements and score are tracked for the duration of the tournament. |
 | **Tournament**             | A multiplayer session in which participants solve the same scenario independently and are ranked by quality achievement and remaining budget.            |
 | **Room Code**              | A short alphanumeric code used to join a tournament room without authentication.                                                                       |
-| **ADR**                    | Architecture Decision Record — a document capturing a significant architectural decision and its rationale.                                            |
+| **ADR**                    | Architecture Decision Record - a document capturing a significant architectural decision and its rationale.                                            |

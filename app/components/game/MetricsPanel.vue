@@ -196,7 +196,7 @@ const setupBudgetPct = computed(() =>
             <span class="text-sm font-semibold text-default">Availability</span>
           </div>
           <p class="text-sm text-muted leading-relaxed">
-            Product of every service's uptime. Each dependency that can fail multiplies the risk — one unreliable node pulls the whole chain down.
+            Product of every service's uptime. Each dependency that can fail multiplies the risk. One unreliable node pulls the whole chain down.
           </p>
           <div class="font-mono text-xs bg-elevated rounded-md px-3 py-2 text-muted">
             system = API% × DB% × … × 100
@@ -214,7 +214,7 @@ const setupBudgetPct = computed(() =>
             <span class="text-sm font-semibold text-default">Latency</span>
           </div>
           <p class="text-sm text-muted leading-relaxed">
-            Sum of all network hops (edges) and processing times (nodes). Every step in the call chain adds delay — end-to-end time is the full round trip.
+            Sum of all network hops (edges) and processing times (nodes). Every step in the call chain adds delay. End-to-end time is the full round trip.
           </p>
           <div class="font-mono text-xs bg-elevated rounded-md px-3 py-2 text-muted">
             system = Σ edge latencies + Σ node processing
@@ -232,7 +232,7 @@ const setupBudgetPct = computed(() =>
             <span class="text-sm font-semibold text-default">Throughput</span>
           </div>
           <p class="text-sm text-muted leading-relaxed">
-            The narrowest bottleneck in your system. Traffic can only flow as fast as the slowest component — node capacity or link bandwidth, whichever is smallest.
+            The narrowest bottleneck in your system. Traffic can only flow as fast as the slowest component - node capacity or link bandwidth, whichever is smallest.
           </p>
           <div class="font-mono text-xs bg-elevated rounded-md px-3 py-2 text-muted">
             system = min(node capacities, link bandwidths)

@@ -5,7 +5,7 @@ import { AppError } from '~~/server/domain/errors'
 import { ScenarioId, type ScenarioSummary } from '~~/server/domain/scenario/scenario'
 import type { ScenarioRepository } from '~~/server/ports/scenario-repository'
 
-// Wire format schema — describes the JSON file on disk.
+// Wire format schema - describes the JSON file on disk.
 // Versioned independently from the domain schema.
 
 const MetricsSchema = z

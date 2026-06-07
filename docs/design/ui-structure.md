@@ -1,6 +1,6 @@
 # UI Structure
 
-Architecture simulator frontend — routing, layouts, and design decisions.
+Architecture simulator frontend - routing, layouts, and design decisions.
 
 ## Design decisions
 
@@ -20,9 +20,9 @@ Architecture simulator frontend — routing, layouts, and design decisions.
 | Layout | File | Used for |
 |---|---|---|
 | `landing` | `layouts/landing.vue` | Landing, `/play` browser, `/learn` pages |
-| `auth` | `layouts/auth.vue` | Login/auth pages — no nav chrome |
-| `game` | `layouts/game.vue` | `/play/[slug]`, tournament play — minimal top bar |
-| `dashboard` | `layouts/dashboard.vue` | Authenticated user area — different nav with sidebar |
+| `auth` | `layouts/auth.vue` | Login/auth pages - no nav chrome |
+| `game` | `layouts/game.vue` | `/play/[slug]`, tournament play - minimal top bar |
+| `dashboard` | `layouts/dashboard.vue` | Authenticated user area - different nav with sidebar |
 
 > `game` and `dashboard` layouts are not yet implemented.
 
@@ -50,7 +50,7 @@ Architecture simulator frontend — routing, layouts, and design decisions.
 /dashboard/tournaments        My tournaments
 /scenarios/new                Custom scenario designer
 /tournaments/new              Create tournament room (pick scenario, configure)
-/tournaments/[id]/host        Host dashboard — participant list, start button, live status
+/tournaments/[id]/host        Host dashboard - participant list, start button, live status
 ```
 
 ## Navigation
@@ -83,9 +83,9 @@ When `game` layout is active on mobile, the three panels (canvas, improvements, 
 
 ## Landing page sections
 
-1. **Hero** — headline, description, primary CTA (Play) + secondary CTA (Learn). Static canvas topology preview on the right.
-2. **Features** — 3 features: Simulate / Learn / Compete
-3. **CTA** — "No account needed to start" with Play now button
+1. **Hero** - headline, description, primary CTA (Play) + secondary CTA (Learn). Static canvas topology preview on the right.
+2. **Features** - 3 features: Simulate / Learn / Compete
+3. **CTA** - "No account needed to start" with Play now button
 
 Auth-gated features (creating scenarios, hosting tournaments) are described in the features section but the CTA leads to Dashboard which handles auth redirect.
 
@@ -104,9 +104,9 @@ Auth-gated features (creating scenarios, hosting tournaments) are described in t
 - Canvas is read-only (no new connections, no edge updates), node dragging allowed
 
 **Game layout panels**:
-- Left (264px): `MetricsPanel` — current vs target metrics, two budget progress bars (yearly operational + one-time), scenario description
+- Left (264px): `MetricsPanel` - current vs target metrics, two budget progress bars (yearly operational + one-time), scenario description
 - Center (flex): VueFlow canvas wrapped in `<ClientOnly>`
-- Right (288px): `ImprovementsPanel` — available improvements with apply button, applied improvements with remove button
+- Right (288px): `ImprovementsPanel` - available improvements with apply button, applied improvements with remove button
 - Mobile: bottom tab bar (Canvas | Metrics | Improve)
 
 **Win condition**: all target metrics met AND both budget limits not exceeded → `UModal` overlay

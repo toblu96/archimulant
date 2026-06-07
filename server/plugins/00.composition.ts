@@ -6,7 +6,7 @@ export default defineNitroPlugin(async (nitroApp) => {
   const container = buildAppContainer(config)
 
   // Apply auth migrations before the server accepts traffic.
-  // Idempotent — only creates/alters tables that don't match the auth config.
+  // Idempotent - only creates/alters tables that don't match the auth config.
   if (config.auth.autoMigrate) {
     container.appLogger.info({ event: 'auth.migrations.applying' })
     const { runMigrations, toBeCreated, toBeAdded } = await getMigrations(

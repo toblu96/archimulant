@@ -1,4 +1,4 @@
-# Server Architecture — Hexagonal (Ports & Adapters) on Nitro
+# Server Architecture - Hexagonal (Ports & Adapters) on Nitro
 
 This server applies the **Hexagonal Architecture (Ports & Adapters)** pattern on Nuxt 4 + Nitro. The dependency rules below are strict; violations break the architecture and must be rejected in review.
 
@@ -38,7 +38,7 @@ server/
 │   └── <feature>-repository.ts
 ├── application/                  # Use cases. Plain async functions.
 │   ├── auth/
-│   │   └── guards.ts             # requireUser, requireOwner — type-narrowing checks.
+│   │   └── guards.ts             # requireUser, requireOwner - type-narrowing checks.
 │   └── <feature>/
 │       └── <verb>.usecase.ts
 ├── adapters/
@@ -64,9 +64,9 @@ server/
 
 `auth.config.ts` at the **repo root** (not under `server/`) is a CLI-only file consumed by `pnpm dlx auth@latest generate`. See the Authentication section for details.
 
-## Wiring — Nitro primitives mapped to roles
+## Wiring - Nitro primitives mapped to roles
 
-### `server/container.ts` — the only file that knows the bindings
+### `server/container.ts` - the only file that knows the bindings
 
 ```ts
 export interface AppContainer {
@@ -88,7 +88,7 @@ export const buildAppContainer = (config: RuntimeConfig): AppContainer => ({
 
 This is the **composition point**. To swap an adapter (Postgres → in-memory, JSON file → S3), change this file and nothing else.
 
-### `server/plugins/00.composition.ts` — composition root
+### `server/plugins/00.composition.ts` - composition root
 
 Runs once at startup. Builds singletons, attaches them to `nitroApp`, registers shutdown.
 
@@ -103,7 +103,7 @@ export default defineNitroPlugin((nitroApp) => {
 })
 ```
 
-### `server/middleware/00.context.ts` — request scope
+### `server/middleware/00.context.ts` - request scope
 
 Runs on every request. Builds the request-scoped container and attaches it to `event.context.scope`.
 
@@ -118,7 +118,7 @@ export default defineEventHandler((event) => {
 })
 ```
 
-### `server/types/h3.d.ts` — type augmentation
+### `server/types/h3.d.ts` - type augmentation
 
 ```ts
 import type { RequestContainer } from '~/server/container'
@@ -133,7 +133,7 @@ This gives `event.context.scope` full type inference in every handler. No access
 
 Patterns are presented inner-to-outer, matching the dependency rule. Each layer below only references types from the layers above it.
 
-### Domain — pure types and invariants
+### Domain - pure types and invariants
 
 The domain uses **Zod schemas as the source of truth**. Types are derived via `z.infer`, and each value object has an ergonomic factory that wraps the schema with a typed domain error.
 
@@ -196,7 +196,7 @@ export const ScenarioSchema = z.object({
 })
 export type Scenario = z.infer<typeof ScenarioSchema>
 
-// Domain projection — pick the summary fields from the full schema so they
+// Domain projection - pick the summary fields from the full schema so they
 // stay in sync automatically.
 export const ScenarioSummarySchema = ScenarioSchema.pick({
   id: true,
@@ -212,7 +212,7 @@ export type ScenarioSummary = z.infer<typeof ScenarioSummarySchema>
 - **Interfaces, not classes.** Behaviour over domain types lives in colocated pure functions if needed (e.g. `compute-metrics.ts`).
 - **Only `zod` and `AppError` are allowed as external imports.** No I/O, no framework, no `node:*`, no adapters, no application code.
 
-### Ports — interfaces only
+### Ports - interfaces only
 
 ```ts
 // server/ports/scenario-repository.ts
@@ -228,7 +228,7 @@ export interface ScenarioRepository {
 - Method signatures use only domain types.
 - One port per file.
 
-### Use cases — plain async functions, deps as first argument
+### Use cases - plain async functions, deps as first argument
 
 ```ts
 // server/application/scenario/get-scenario.usecase.ts
@@ -258,7 +258,7 @@ export const getScenario = async (
 - Returns domain types.
 - Never imports from `h3`, `nitro`, `node:*`, or any adapter.
 
-### Outbound adapters — factory functions returning the port type
+### Outbound adapters - factory functions returning the port type
 
 ```ts
 // server/adapters/outbound/json-file-scenario-repository.ts
@@ -270,7 +270,7 @@ import type { ScenarioRepository } from '~/server/ports/scenario-repository'
 // schema: it describes what's on disk today, may include legacy fields, and
 // gets versioned independently as the file format evolves.
 const ScenarioFileV1Schema = z.object({
-  id: z.string(),                           // raw — branded via domain factory below
+  id: z.string(),                           // raw - branded via domain factory below
   name: z.string(),
   description: z.string(),
   nodes: z.array(/* … */),
@@ -298,7 +298,7 @@ export const createJsonFileScenarioRepository = (
 - May construct domain values; may NOT call domain operations.
 - Throws domain errors out, never `ZodError` or `ENOENT`. Wrap technology errors at the adapter boundary.
 
-### Inbound HTTP adapters — `server/api/`
+### Inbound HTTP adapters - `server/api/`
 
 ```ts
 // server/api/scenarios/[id].get.ts
@@ -310,7 +310,7 @@ export default defineEventHandler(async (event) => {
     return await getScenario(event.context.scope, id)
   } catch (err) {
     // Map endpoint-specific codes here. Cross-cutting codes (invalid-input,
-    // internal-error) are mapped by the global error handler — let them through.
+    // internal-error) are mapped by the global error handler - let them through.
     if (err instanceof AppError && err.code === 'urn:archimulant:scenario-not-found') {
       throw createError({
         statusCode: 404,
@@ -328,7 +328,7 @@ export default defineEventHandler(async (event) => {
 - Map **endpoint-specific** error codes to HTTP statuses via `createError({ data })`. Let cross-cutting codes fall through to the global error handler.
 - **No business logic.** If the body of a handler contains anything other than parsing, calling, and translating, it belongs in a use case.
 
-### Error handling — single `AppError` class, code-driven
+### Error handling - single `AppError` class, code-driven
 
 All layers throw the same class. The `code` carries the meaning. RFC 9457 Problem Details is the response format.
 
@@ -371,7 +371,7 @@ export function findAppError(err: unknown): AppError | null {
 }
 ```
 
-The global Nitro error handler maps cross-cutting codes to HTTP status and emits RFC 9457 Problem Details. Endpoint-specific codes are not in this catalog — they are handled in route handlers.
+The global Nitro error handler maps cross-cutting codes to HTTP status and emits RFC 9457 Problem Details. Endpoint-specific codes are not in this catalog - they are handled in route handlers.
 
 ```ts
 // server/error.ts (or wherever defineNitroErrorHandler lives)
@@ -383,27 +383,27 @@ const GENERIC_CATALOG: Partial<Record<ErrorCode, { title: string, status: number
 
 - **One class, not many.** No `AdapterError` vs `ApplicationError` split. The `code` is the discriminator.
 - **All layers use `AppError`.** Domain throws it from factories; use cases throw it on business rule violations; adapters throw it (with `internal-error`) when infrastructure fails.
-- **Walk the cause chain to detect.** Use `findAppError(err)` rather than `err instanceof AppError` or name-based checks — h3 wraps errors and may bury yours under one or more levels of `cause`.
+- **Walk the cause chain to detect.** Use `findAppError(err)` rather than `err instanceof AppError` or name-based checks - h3 wraps errors and may bury yours under one or more levels of `cause`.
 - **Adapters wrap technology errors.** Catch `ZodError`, `ENOENT`, `PgError`, etc., and re-throw as `new AppError('urn:archimulant:internal-error', '…', { cause: original })`. Never let raw technology errors escape an adapter.
-- **Endpoint-specific codes are mapped in the route.** Cross-cutting codes are mapped in `server/error.ts`. Don't put `scenario-not-found` in the global catalog — different endpoints may want different statuses or titles for the same code.
+- **Endpoint-specific codes are mapped in the route.** Cross-cutting codes are mapped in `server/error.ts`. Don't put `scenario-not-found` in the global catalog - different endpoints may want different statuses or titles for the same code.
 - **Response shape is RFC 9457.** Body is `application/problem+json` with `type`, `title`, `status`, `detail`, `instance`, plus optional extensions `why` and `fix`. Include the request id (from `event.context.scope.logger`) so user-reported errors can be grepped in logs.
 - **Security headers on errors.** `nosniff`, `frame-ancestors 'none'`, `cache-control: no-cache`. The global handler is the single place this is enforced.
 
-### Logging — evlog wide events behind two ports
+### Logging - evlog wide events behind two ports
 
 Logging uses **evlog**, a wide-event logger. One request emits one log line at the end, with context accumulated throughout via `log.set({ … })`. This is intentionally NOT a pino-style "info/warn/error log everywhere" model. Capture context at boundaries and decision points, not by tracing function flow.
 
 evlog provides three APIs. The architecture uses two of them:
 
-- **`useLogger(event)` from `evlog/nitro/v3`** — request-scoped wide events. `set()` accumulates, framework emits at request end. Wraps to the `Logger` port.
-- **`log.info(...)` from `evlog`** — fire-and-forget structured logs. One call, one emitted line. Wraps to the `AppLogger` port.
+- **`useLogger(event)` from `evlog/nitro/v3`** - request-scoped wide events. `set()` accumulates, framework emits at request end. Wraps to the `Logger` port.
+- **`log.info(...)` from `evlog`** - fire-and-forget structured logs. One call, one emitted line. Wraps to the `AppLogger` port.
 
-We deliberately do **not** use `createLogger()` from evlog. `createLogger()` is shaped for "one wide event per unit of work" (script, job, workflow) — each instance accumulates context and emits once, then is sealed. It's the wrong shape for discrete lifecycle events like "pool created" or "migration applied", which are individual structured events. Using `createLogger()` for lifecycle events produces `log.set() called after the wide event was emitted` warnings as the sealed instance is reused.
+We deliberately do **not** use `createLogger()` from evlog. `createLogger()` is shaped for "one wide event per unit of work" (script, job, workflow) - each instance accumulates context and emits once, then is sealed. It's the wrong shape for discrete lifecycle events like "pool created" or "migration applied", which are individual structured events. Using `createLogger()` for lifecycle events produces `log.set() called after the wide event was emitted` warnings as the sealed instance is reused.
 
 The two ports model the right semantics for each use case:
 
-- **`Logger`** (one method, `set()`) — request-scoped. Lives on `event.context.scope.logger`. Used by use cases and per-request adapter calls. Framework handles emission.
-- **`AppLogger`** (one method, `log()`) — app-scoped. Lives on `AppContainer.appLogger`. Used by singletons, lifecycle events, plugin hooks, and out-of-request callbacks. Each call emits one structured log line immediately via `evlog.log.info`.
+- **`Logger`** (one method, `set()`) - request-scoped. Lives on `event.context.scope.logger`. Used by use cases and per-request adapter calls. Framework handles emission.
+- **`AppLogger`** (one method, `log()`) - app-scoped. Lives on `AppContainer.appLogger`. Used by singletons, lifecycle events, plugin hooks, and out-of-request callbacks. Each call emits one structured log line immediately via `evlog.log.info`.
 
 ```ts
 // server/ports/logger.ts
@@ -442,7 +442,7 @@ export const createEvlogLoggerAdapter = (evlog: EvlogRequestLog): Logger => ({
 })
 
 // App-scoped: each log() call is a fire-and-forget structured event.
-// Uses evlog's simple log API (log.info), NOT createLogger — createLogger is
+// Uses evlog's simple log API (log.info), NOT createLogger - createLogger is
 // for accumulated wide events per unit of work, which is the wrong shape for
 // discrete lifecycle events. `defaults` merge into every emitted event.
 export const createEvlogAppLoggerAdapter = (
@@ -499,7 +499,7 @@ export default defineEventHandler((event) => {
 
 #### When to use which
 
-The decision is mechanical — ask *when can this event fire?*
+The decision is mechanical - ask *when can this event fire?*
 
 - **Only ever inside a request** → use `logger` (request-scoped). Examples: use-case decisions, validation outcomes, audit events tied to a user action.
 - **Can fire outside a request** → use `appLogger`. Examples: pool lifecycle events, plugin boot/shutdown, scheduled jobs, callbacks on long-lived objects.
@@ -507,7 +507,7 @@ The decision is mechanical — ask *when can this event fire?*
 
 #### Pattern: lifecycle events in singleton adapters
 
-Adapters with lifecycle (pool, message bus, watcher) take `appLogger` at construction. **Lifecycle events** go to `appLogger`. **Query/operation failures** are thrown as `AppError`, not logged — they bubble to the global error handler, which attaches them to the request wide event.
+Adapters with lifecycle (pool, message bus, watcher) take `appLogger` at construction. **Lifecycle events** go to `appLogger`. **Query/operation failures** are thrown as `AppError`, not logged - they bubble to the global error handler, which attaches them to the request wide event.
 
 ```ts
 // server/adapters/outbound/postgres-pool.ts
@@ -544,7 +544,7 @@ export const createPostgresPool = (config: {
 }
 ```
 
-#### Use cases — receive `logger` only when needed
+#### Use cases - receive `logger` only when needed
 
 ```ts
 export const getScenario = async (
@@ -577,23 +577,23 @@ if (appError) {
 ```
 
 - **Wide events, not log levels.** Use `set(...)` (request) or `log(...)` (app) to attach structured context. Don't add `info`/`warn`/`error` methods to either port; severity is determined by the response status and any attached error.
-- **Two ports, different semantics.** `Logger` has `set()` only — request-scoped, framework emits at request end. `AppLogger` has `log()` only — app-scoped, each call emits one line. Don't try to unify them.
+- **Two ports, different semantics.** `Logger` has `set()` only - request-scoped, framework emits at request end. `AppLogger` has `log()` only - app-scoped, each call emits one line. Don't try to unify them.
 - **Singleton adapters log lifecycle, throw operation errors.** Pool created/closed/idle-error → `appLogger.log(...)`. Query failure → `throw new AppError(...)`, no logging at the adapter.
 - **Don't bridge appLogger → request wide event.** evlog's Nitro adapter doesn't use AsyncLocalStorage, so callbacks on long-lived objects can't know which request triggered them. Don't build your own ALS to fake it.
 - **Inject `logger` into a use case only when needed.** Most use cases don't log; auto-captured boundary context is enough.
-- **Multi-step app tasks get a one-off `createLogger`.** For a background task that genuinely is "one unit of work emitting one wide event with accumulated context" (a sync job, a simulation run, a batch import), use evlog's `createLogger({ ... })` directly in that task — `set()` as you go, `emit()` at the end. This is the only legitimate use of `createLogger` in the codebase. Do NOT wire `createLogger` into `AppLogger`; it has the wrong shape for discrete lifecycle events and will produce `called after emit` warnings.
-- **Use evlog's `createError` if you want `why`/`fix` auto-captured into the wide event from `throw`.** Otherwise call `logger.set({ error: { … } })` explicitly. Both work — pick one and be consistent.
+- **Multi-step app tasks get a one-off `createLogger`.** For a background task that genuinely is "one unit of work emitting one wide event with accumulated context" (a sync job, a simulation run, a batch import), use evlog's `createLogger({ ... })` directly in that task - `set()` as you go, `emit()` at the end. This is the only legitimate use of `createLogger` in the codebase. Do NOT wire `createLogger` into `AppLogger`; it has the wrong shape for discrete lifecycle events and will produce `called after emit` warnings.
+- **Use evlog's `createError` if you want `why`/`fix` auto-captured into the wide event from `throw`.** Otherwise call `logger.set({ error: { … } })` explicitly. Both work - pick one and be consistent.
 
-### Authentication & authorization — better-auth behind a port
+### Authentication & authorization - better-auth behind a port
 
 Authentication uses **better-auth**, which owns its own HTTP routes (`/api/auth/*`), DB tables, and session model. To avoid coupling the application to it, the public surface is wrapped behind a `SessionResolver` port. The application speaks our domain `User`, not better-auth's session shape.
 
 The split is:
 
-- **Authentication** (who is making this request?) — resolved once per request in middleware, attached to `event.context.scope.currentUser`.
-- **Authorization** (is this user allowed to do this?) — enforced in use cases via thin guards, never in HTTP middleware (URL-coupled enforcement is brittle).
+- **Authentication** (who is making this request?) - resolved once per request in middleware, attached to `event.context.scope.currentUser`.
+- **Authorization** (is this user allowed to do this?) - enforced in use cases via thin guards, never in HTTP middleware (URL-coupled enforcement is brittle).
 
-#### Domain — our `User`
+#### Domain - our `User`
 
 ```ts
 // server/domain/auth/user.ts
@@ -619,7 +619,7 @@ export type User = z.infer<typeof UserSchema>
 
 Contains **only** the fields use cases actually need. Don't add provider info, avatar URLs, `createdAt`, or anything else that doesn't drive a domain rule. Each field is a contract you commit to.
 
-#### Port — `SessionResolver`
+#### Port - `SessionResolver`
 
 ```ts
 // server/ports/session-resolver.ts
@@ -632,7 +632,7 @@ export interface SessionResolver {
 
 `headers` is the standard Web `Headers` (h3's `event.headers`), not Node's `IncomingHttpHeaders`.
 
-#### Adapter — better-auth instance + resolver
+#### Adapter - better-auth instance + resolver
 
 ```ts
 // server/adapters/outbound/better-auth.ts
@@ -672,7 +672,7 @@ export const createBetterAuthSessionResolver = (auth: AuthInstance): SessionReso
 
 Adapter owns the mapping from better-auth's session shape to our domain `User`. better-auth's full session never enters the application layer.
 
-#### Container — wires both
+#### Container - wires both
 
 ```ts
 // server/container.ts
@@ -700,7 +700,7 @@ export const buildAppContainer = (config: RuntimeConfig): AppContainer => {
 }
 ```
 
-#### Inbound — the catch-all mount
+#### Inbound - the catch-all mount
 
 ```ts
 // server/api/auth/[...all].ts
@@ -709,14 +709,14 @@ export default defineEventHandler((event) => {
 })
 ```
 
-The only file that knows better-auth handles HTTP routes. Sign-in, OAuth callbacks, session refresh — all handled by better-auth via this single route.
+The only file that knows better-auth handles HTTP routes. Sign-in, OAuth callbacks, session refresh - all handled by better-auth via this single route.
 
-#### Build-time — `auth.config.ts` for the better-auth CLI
+#### Build-time - `auth.config.ts` for the better-auth CLI
 
 The better-auth CLI (`pnpm dlx auth@latest generate ...`) needs a top-level `auth` export to introspect the schema. Our factory pattern doesn't satisfy it directly. Add a thin CLI-only config file at the repo root that calls the same factory:
 
 ```ts
-// auth.config.ts (repo root — CLI-only, NOT imported at runtime)
+// auth.config.ts (repo root - CLI-only, NOT imported at runtime)
 import 'dotenv/config'
 import { createAuthInstance } from './server/adapters/outbound/better-auth'
 
@@ -730,18 +730,18 @@ export const auth = createAuthInstance({
     clientId: process.env.GITHUB_CLIENT_ID ?? 'cli-placeholder',
     clientSecret: process.env.GITHUB_CLIENT_SECRET ?? 'cli-placeholder',
   },
-  // database adapter — schema generation needs to see this
+  // database adapter - schema generation needs to see this
 })
 ```
 
 Run schema generation with `pnpm dlx auth@latest generate --config ./auth.config.ts`. The placeholder secrets are fine; the CLI only introspects the config shape (database adapter, plugins, providers) and doesn't make network calls. Both runtime (via `container.ts`) and CLI (via this file) call the same `createAuthInstance`, so the config shape can't drift.
 
-#### Schema migrations — applied at server startup for SQLite
+#### Schema migrations - applied at server startup for SQLite
 
 Better-auth ships two ways to apply schema changes:
 
-- **CLI** — `auth migrate --config ./auth.config.ts --yes` introspects the live DB, diffs against the auth config, and applies missing tables/columns. Idempotent. Available only for the built-in Kysely adapter (SQLite/Postgres/MySQL/MSSQL); for Prisma/Drizzle, use the ORM's own migration tool.
-- **Programmatic** — `getMigrations(options)` from `better-auth/db/migration` returns `{ toBeCreated, toBeAdded, runMigrations }`. Same logic as the CLI, callable from code.
+- **CLI** - `auth migrate --config ./auth.config.ts --yes` introspects the live DB, diffs against the auth config, and applies missing tables/columns. Idempotent. Available only for the built-in Kysely adapter (SQLite/Postgres/MySQL/MSSQL); for Prisma/Drizzle, use the ORM's own migration tool.
+- **Programmatic** - `getMigrations(options)` from `better-auth/db/migration` returns `{ toBeCreated, toBeAdded, runMigrations }`. Same logic as the CLI, callable from code.
 
 For **SQLite local dev**, run migrations from the composition root so the server is never up against a stale schema. This is safe for SQLite because it's a single-process file DB; for Postgres in production, disable this toggle and run migrations via CI/CD instead.
 
@@ -789,7 +789,7 @@ runtimeConfig: {
 
 Set `AUTH_AUTO_MIGRATE=true` in `.env` for local dev. Leave unset in production.
 
-Also add `package.json` scripts for explicit CLI use — schema inspection, manual production deploys, or as a fallback:
+Also add `package.json` scripts for explicit CLI use - schema inspection, manual production deploys, or as a fallback:
 
 ```json
 {
@@ -800,11 +800,11 @@ Also add `package.json` scripts for explicit CLI use — schema inspection, manu
 }
 ```
 
-- **Auto-migrate is dev-only for shared databases.** SQLite local files are safe; Postgres/MySQL with multiple server instances are not — concurrent `CREATE TABLE` attempts can collide.
+- **Auto-migrate is dev-only for shared databases.** SQLite local files are safe; Postgres/MySQL with multiple server instances are not - concurrent `CREATE TABLE` attempts can collide.
 - **Migrations run before the container is published.** The plugin is `async`; Nitro doesn't open the port until it resolves. No race between server-accepting-traffic and schema-being-ready.
-- **`getMigrations` only works with the Kysely adapter.** With Prisma/Drizzle, use their migration tools (`prisma migrate deploy`, `drizzle-kit migrate`) — the CLI/programmatic path doesn't apply.
+- **`getMigrations` only works with the Kysely adapter.** With Prisma/Drizzle, use their migration tools (`prisma migrate deploy`, `drizzle-kit migrate`) - the CLI/programmatic path doesn't apply.
 
-#### Middleware — resolve session, populate `currentUser`
+#### Middleware - resolve session, populate `currentUser`
 
 ```ts
 // server/middleware/00.context.ts
@@ -838,9 +838,9 @@ export default defineEventHandler(async (event) => {
 })
 ```
 
-`SKIP_AUTH_PATHS` is mandatory for `/api/auth/` — resolving the session on better-auth's own routes would recurse. Health/public routes save a DB query.
+`SKIP_AUTH_PATHS` is mandatory for `/api/auth/` - resolving the session on better-auth's own routes would recurse. Health/public routes save a DB query.
 
-#### Application — guards in use cases
+#### Application - guards in use cases
 
 ```ts
 // server/application/auth/guards.ts
@@ -911,19 +911,19 @@ And to `GENERIC_CATALOG` in `server/error.ts`:
 'urn:archimulant:forbidden':    { title: 'Forbidden',    status: 403 },
 ```
 
-Both are cross-cutting — every protected use case throws these codes the same way, so they belong in the global catalog and never need per-route mapping.
+Both are cross-cutting - every protected use case throws these codes the same way, so they belong in the global catalog and never need per-route mapping.
 
-- **Domain `User` contains only fields use cases use.** Avatar URLs, provider info, `createdAt` — keep them in better-auth, don't surface them.
-- **`SessionResolver` is the only port for auth.** The application never imports `better-auth` directly. No "AuthService", no "AuthProvider" — one port, `resolve(headers)`.
+- **Domain `User` contains only fields use cases use.** Avatar URLs, provider info, `createdAt` - keep them in better-auth, don't surface them.
+- **`SessionResolver` is the only port for auth.** The application never imports `better-auth` directly. No "AuthService", no "AuthProvider" - one port, `resolve(headers)`.
 - **Session resolution happens in middleware exactly once per request.** Use cases read `currentUser` from `deps`; they never call the resolver themselves.
 - **`SKIP_AUTH_PATHS` must include `/api/auth/`** to prevent recursion. Add public/health routes for performance.
 - **Authorization is in the use case, not the route.** HTTP middleware doesn't know domain rules; use cases do. Routes stay thin even for protected operations.
-- **Use type-narrowing guards.** `requireUser(deps.currentUser)` returns `User`, not `void` — it's both a check and a refinement.
+- **Use type-narrowing guards.** `requireUser(deps.currentUser)` returns `User`, not `void` - it's both a check and a refinement.
 - **Domain policy rules are pure functions in `domain/<feature>/policies.ts`.** Application guards combine them with `requireUser`/`requireOwner` and translate to `AppError`.
 
-## Strict rules — MUST follow
+## Strict rules - MUST follow
 
-- **Domain is pure.** Zero imports from `h3`, `nitro`, `node:*`, or anything in `adapters/` or `application/`. Pure validation libraries (`zod`) are allowed: they have no I/O and no framework coupling, and they express invariants — which is what the domain owns.
+- **Domain is pure.** Zero imports from `h3`, `nitro`, `node:*`, or anything in `adapters/` or `application/`. Pure validation libraries (`zod`) are allowed: they have no I/O and no framework coupling, and they express invariants - which is what the domain owns.
 - **Application is framework-free.** Use cases receive `deps`, never `event` or `H3Event`.
 - **Ports are domain-specific.** `ScenarioRepository`, not `FileSystemPort` or generic `Repository<T>`.
 - **Composition happens in one place.** All wiring lives in `server/container.ts`. Use cases and adapters never instantiate each other.
@@ -935,7 +935,7 @@ Both are cross-cutting — every protected use case throws these codes the same 
 - **Two logger ports.** `Logger` (`set()` only) is request-scoped, lives on `event.context.scope.logger`, framework emits at request end. `AppLogger` (`log()` only) is app-scoped, lives on `AppContainer.appLogger`, emits per call. Use cases receive `logger` via `deps` only when needed; singletons receive `appLogger` at construction.
 - **Auth goes through `SessionResolver`.** The `better-auth` instance is owned by one adapter file and one inbound mount route. Application code never imports `better-auth`; it reads `currentUser` from `deps`. Authorization is enforced in use cases via `requireUser`/`requireOwner` guards, never in HTTP middleware.
 
-## Forbidden patterns — DO NOT do these
+## Forbidden patterns - DO NOT do these
 
 - ❌ Importing `H3Event`, `useEvent`, or anything from `h3`/`nitro` inside `application/` or `domain/`.
 - ❌ Generic technology-named ports: `FileSystem`, `Database`, `Repository<T>`, `HttpClient`. Always name after the domain.
@@ -944,7 +944,7 @@ Both are cross-cutting — every protected use case throws these codes the same 
 - ❌ `defineEventHandler` outside `server/api/` and `server/middleware/`.
 - ❌ Mutating `event.context` from inside a use case. Context is set in middleware, read in handlers.
 - ❌ NestJS-style decorators (`@Injectable`, `@Inject`, `Reflect.metadata`). We do not use a DI container.
-- ❌ Classes for use cases, adapters, or services. Factory functions returning plain objects only. (`AppError` is the single exception — it must extend `Error`.)
+- ❌ Classes for use cases, adapters, or services. Factory functions returning plain objects only. (`AppError` is the single exception - it must extend `Error`.)
 - ❌ Leaking on-disk JSON shape, ORM row shape, or DTO shape into the domain types.
 - ❌ Throwing technology errors (`PgError`, `ZodError`, `ENOENT`) out of an adapter. Wrap as `AppError` at the adapter boundary, preserve original in `cause`.
 - ❌ Putting accessor functions like `useScenarioRepository(event)` in `server/utils/`. Handlers read `event.context.scope.scenarios` directly.
@@ -955,7 +955,7 @@ Both are cross-cutting — every protected use case throws these codes the same 
 - ❌ Putting endpoint-specific codes (e.g. `scenario-not-found`) in the global error catalog. Map them in the route handler.
 - ❌ Importing `useLogger` from `evlog/nitro/v3` or `createLogger` from `evlog` inside `application/` or `domain/`. Use the `Logger` port via `deps.logger` or `deps.appLogger`.
 - ❌ Using `createLogger()` from `evlog` inside `createEvlogAppLoggerAdapter` or anywhere that emits multiple discrete events. `createLogger` is a one-shot wide-event-per-instance API; reusing one instance for many events produces `called after emit` warnings. Use `log.info(...)` for lifecycle events; reserve `createLogger` for genuine multi-step tasks.
-- ❌ Adding `info`/`warn`/`error` methods to either logger port. evlog is wide-event based — use `set()` (request) or `log()` (app) to attach context.
+- ❌ Adding `info`/`warn`/`error` methods to either logger port. evlog is wide-event based - use `set()` (request) or `log()` (app) to attach context.
 - ❌ Calling `appLogger.set(...)` (it doesn't exist on `AppLogger`). Standalone evlog doesn't auto-emit. Use `appLogger.log(...)` for one-shot events.
 - ❌ Calling `logger.log(...)` (it doesn't exist on `Logger`). Request-scoped evlog accumulates and auto-emits. Use `logger.set(...)`.
 - ❌ Using `appLogger` from inside a use case or per-request handler. In-request code uses `logger`. `appLogger` is for singletons, lifecycle, and background work.
@@ -968,7 +968,7 @@ Both are cross-cutting — every protected use case throws these codes the same 
 - ❌ Putting better-auth's full session shape into the domain `User`. The adapter maps to our minimal User shape; the domain doesn't know about providers, sessions, or cookies.
 - ❌ Removing `/api/auth/` from `SKIP_AUTH_PATHS`. Resolving sessions on better-auth's own routes recurses indefinitely.
 
-## Checklist — adding a new feature
+## Checklist - adding a new feature
 
 1. Define domain types in `server/domain/<feature>/`. No I/O.
 2. Define the port interface in `server/ports/<feature>-repository.ts` using domain types only.
@@ -986,6 +986,6 @@ Both are cross-cutting — every protected use case throws these codes the same 
 
 ## Verification before commit
 
-- `pnpm typecheck` — must pass
-- `pnpm test` — all use-case tests pass
-- `pnpm lint` — import-boundary rules pass (see `eslint.config.ts`)
+- `pnpm typecheck` - must pass
+- `pnpm test` - all use-case tests pass
+- `pnpm lint` - import-boundary rules pass (see `eslint.config.ts`)

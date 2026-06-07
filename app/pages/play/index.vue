@@ -18,7 +18,7 @@ const difficultyColor = (d: string) =>
           Choose a scenario
         </h1>
         <p class="text-muted max-w-2xl">
-          Each scenario presents a system with issues — availability gaps, latency spikes, throughput bottlenecks. Apply improvements under a fixed budget and fix it.
+          Each scenario presents a system with issues like availability gaps, latency spikes, throughput bottlenecks. Apply improvements under a fixed budget and fix it.
         </p>
       </div>
       <div

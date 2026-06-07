@@ -34,7 +34,7 @@ Consider the following assumptions:
 - Target audience are people with basic understanding of software architecture (e.g., students, junior developers). There is no expectation to be able to play the game without prior knowledge.
 - The simulation does not need to be scientifically precise. Simplified, easy-to-understand calculation models are used. What matters is educational plausibility, not precision.
 - Tournament participants do not need a registered account. They join a room using a code or link and play under a nickname of their choice. The host needs an account.
-- All predefined content (scenarios, improvement cards, theoretical content) is created by the system operator. In the first version, end users cannot publish their own content—only hosts can create their own system definitions for their tournaments.
+- All predefined content (scenarios, improvement cards, theoretical content) is created by the system operator. In the first version, end users cannot publish their own content-only hosts can create their own system definitions for their tournaments.
 - The platform is free to use and does not have a paid subscription model.
 - The primary target platform is desktop browsers. A mobile view is desirable, but is not intended to provide an equivalent experience.
 - Tournament rooms are temporary and are not permanently saved once a defined period has ended or expired. Results can be exported by the host.

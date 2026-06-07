@@ -2,7 +2,7 @@
   "id": "ecommerce-peak-traffic",
   "meta": {
     "title": "E-Commerce Peak Traffic",
-    "description": "Your e-commerce platform runs fine on normal days, but collapses under Black Friday load. The single API server is overwhelmed and the database can't keep up. Customers are seeing errors and slow responses. Restore reliability and throughput — without blowing the budget.",
+    "description": "Your e-commerce platform runs fine on normal days, but collapses under Black Friday load. The single API server is overwhelmed and the database can't keep up. Customers are seeing errors and slow responses. Restore reliability and throughput - without blowing the budget.",
     "difficulty": "beginner",
     "tags": [
       "caching",

@@ -37,7 +37,7 @@ const props = defineProps<{
 const { layout } = useLayout()
 const { fitView, zoomIn, zoomOut } = useVueFlow()
 
-// VueFlow owns positions via v-model:nodes — only prop data updates flow in from outside
+// VueFlow owns positions via v-model:nodes - only prop data updates flow in from outside
 const internalNodes = ref<FlowNode[]>([...props.nodes])
 
 watch(() => props.nodes, (updated) => {
