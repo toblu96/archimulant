@@ -22,6 +22,10 @@ type FlowEdge = {
   id: string
   source: string
   target: string
+  data?: {
+    label?: string
+    metrics?: GameMetrics
+  }
   [key: string]: unknown
 }
 
@@ -82,6 +86,10 @@ const panelActions = [
         @click="action.click"
       />
     </Panel>
+
+    <template #edge-metric="edgeProps">
+      <GameFlowEdge v-bind="edgeProps" />
+    </template>
 
     <template #node-person="nodeProps">
       <GameFlowNode v-bind="nodeProps" />

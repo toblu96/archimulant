@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { GameMetrics, GameScenario } from '~/composables/useGameSimulation'
 
+const showInfo = ref(false)
+
 const props = defineProps<{
   scenario: GameScenario
   systemMetrics: GameMetrics
@@ -81,9 +83,18 @@ const setupBudgetPct = computed(() =>
 
     <!-- Metrics -->
     <div>
-      <p class="text-xs font-semibold uppercase tracking-wider text-muted mb-3">
-        Metrics
-      </p>
+      <div class="flex items-center justify-between mb-3">
+        <p class="text-xs font-semibold uppercase tracking-wider text-muted">
+          Metrics
+        </p>
+        <UButton
+          icon="i-tabler-info-circle"
+          color="neutral"
+          variant="ghost"
+          size="xs"
+          @click="showInfo = true"
+        />
+      </div>
       <div class="flex flex-col gap-2">
         <div
           v-for="row in metricRows"
@@ -181,4 +192,65 @@ const setupBudgetPct = computed(() =>
       </div>
     </div>
   </div>
+
+  <UModal
+    v-model:open="showInfo"
+    title="How metrics are calculated"
+  >
+    <template #body>
+      <div class="space-y-6">
+        <div class="space-y-2">
+          <div class="flex items-center gap-2">
+            <UIcon
+              name="i-tabler-shield-check"
+              class="size-4 text-muted shrink-0"
+            />
+            <span class="text-sm font-semibold text-default">Availability</span>
+          </div>
+          <p class="text-sm text-muted leading-relaxed">
+            Product of every service's uptime. Each dependency that can fail multiplies the risk — one unreliable node pulls the whole chain down.
+          </p>
+          <div class="font-mono text-xs bg-elevated rounded-md px-3 py-2 text-muted">
+            system = API% × DB% × … × 100
+          </div>
+        </div>
+
+        <USeparator />
+
+        <div class="space-y-2">
+          <div class="flex items-center gap-2">
+            <UIcon
+              name="i-tabler-stopwatch"
+              class="size-4 text-muted shrink-0"
+            />
+            <span class="text-sm font-semibold text-default">Latency</span>
+          </div>
+          <p class="text-sm text-muted leading-relaxed">
+            Sum of all network hops (edges) and processing times (nodes). Every step in the call chain adds delay — end-to-end time is the full round trip.
+          </p>
+          <div class="font-mono text-xs bg-elevated rounded-md px-3 py-2 text-muted">
+            system = Σ edge latencies + Σ node processing
+          </div>
+        </div>
+
+        <USeparator />
+
+        <div class="space-y-2">
+          <div class="flex items-center gap-2">
+            <UIcon
+              name="i-tabler-activity"
+              class="size-4 text-muted shrink-0"
+            />
+            <span class="text-sm font-semibold text-default">Throughput</span>
+          </div>
+          <p class="text-sm text-muted leading-relaxed">
+            The narrowest bottleneck in your system. Traffic can only flow as fast as the slowest component — node capacity or link bandwidth, whichever is smallest.
+          </p>
+          <div class="font-mono text-xs bg-elevated rounded-md px-3 py-2 text-muted">
+            system = min(node capacities, link bandwidths)
+          </div>
+        </div>
+      </div>
+    </template>
+  </UModal>
 </template>

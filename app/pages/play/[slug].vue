@@ -48,17 +48,19 @@ const flowNodes = computed(() =>
 )
 
 const flowEdges = computed(() =>
-  simulatedEdges.value.map(edge => ({
-    id: edge.id,
-    source: edge.source,
-    target: edge.target,
-    label: edge.label,
-    animated: isTargetedByApplied(edge.id),
-    style: { stroke: isTargetedByApplied(edge.id) ? 'var(--ui-primary)' : 'var(--ui-border)' },
-    labelStyle: { fill: 'var(--ui-text-muted)', fontSize: '10px', fontFamily: 'inherit' },
-    labelBgStyle: { fill: 'var(--ui-bg)', rx: 4, ry: 4 },
-    markerEnd: { type: MarkerType.ArrowClosed, color: 'var(--ui-border)' }
-  }))
+  simulatedEdges.value.map(edge => {
+    const active = isTargetedByApplied(edge.id)
+    return {
+      id: edge.id,
+      source: edge.source,
+      target: edge.target,
+      type: 'metric',
+      data: { label: edge.label, metrics: edge.metrics },
+      animated: active,
+      style: { stroke: active ? 'var(--ui-primary)' : 'var(--ui-border)' },
+      markerEnd: { type: MarkerType.ArrowClosed, color: active ? 'var(--ui-primary)' : 'var(--ui-border)' }
+    }
+  })
 )
 
 // Mobile tab

@@ -78,7 +78,7 @@
         "target": "api",
         "metrics": {
           "latencyMs": 5,
-          "throughputRps": 1000,
+          "bandwidthRps": 1000,
           "failRate": 0.001
         }
       },
@@ -89,7 +89,7 @@
         "target": "db",
         "metrics": {
           "latencyMs": 20,
-          "throughputRps": 250,
+          "bandwidthRps": 250,
           "failRate": 0.002
         }
       }
@@ -118,7 +118,7 @@
       "appliesTo": [
         {
           "targetId": "api-db",
-          "effects": { "latencyMs": -15, "throughputRps": 250, "failRate": -0.001 }
+          "effects": { "latencyMs": -15, "bandwidthRps": 250, "failRate": -0.001 }
         }
       ]
     },

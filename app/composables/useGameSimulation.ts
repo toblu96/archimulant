@@ -3,6 +3,7 @@ import type { MaybeRef } from 'vue'
 export interface GameMetrics {
   availability?: number
   throughputRps?: number
+  bandwidthRps?: number
   latencyMs?: number
   requestsPerSecond?: number
   failRate?: number
@@ -69,6 +70,9 @@ function applyEffects(metrics: GameMetrics, effects: Partial<GameMetrics>): Game
     latencyMs: effects.latencyMs !== undefined
       ? Math.max(0, (metrics.latencyMs ?? 0) + effects.latencyMs)
       : metrics.latencyMs,
+    bandwidthRps: effects.bandwidthRps !== undefined
+      ? Math.max(0, (metrics.bandwidthRps ?? 0) + effects.bandwidthRps)
+      : metrics.bandwidthRps,
     failRate: effects.failRate !== undefined
       ? clamp((metrics.failRate ?? 0) + effects.failRate, 0, 1)
       : metrics.failRate,
@@ -93,10 +97,10 @@ function computeSystemMetrics(nodes: GameNode[], edges: GameEdge[]): GameMetrics
   const nodeThroughputs = nonPersonNodes
     .map(n => n.metrics.throughputRps)
     .filter((v): v is number => v !== undefined && v > 0)
-  const edgeThroughputs = edges
-    .map(e => e.metrics.throughputRps)
+  const edgeBandwidths = edges
+    .map(e => e.metrics.bandwidthRps)
     .filter((v): v is number => v !== undefined && v > 0)
-  const allThroughputs = [...nodeThroughputs, ...edgeThroughputs]
+  const allThroughputs = [...nodeThroughputs, ...edgeBandwidths]
   const throughputRps = allThroughputs.length > 0 ? Math.min(...allThroughputs) : 0
 
   return { availability, latencyMs, throughputRps }
