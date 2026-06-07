@@ -101,11 +101,15 @@
       "title": "Scale API Server Horizontally",
       "description": "Run multiple API server instances behind a load balancer. Distributes traffic and removes the single point of failure.",
       "learnMoreSlug": "horizontal-scaling",
-      "cost": { "yearlyOperational": 1440, "oneTimeInvestment": 0 },
+      "cost": { "yearlyOperational": 1440, "oneTimeInvestment": 800 },
       "appliesTo": [
         {
           "targetId": "api",
           "effects": { "availability": 0.7, "throughputRps": 500, "latencyMs": -60 }
+        },
+        {
+          "targetId": "client-api",
+          "effects": { "latencyMs": 3 }
         }
       ]
     },
@@ -114,11 +118,15 @@
       "title": "Add Redis Cache",
       "description": "Cache frequent database queries in Redis. Reduces DB load, lowers latency for repeated reads, and absorbs traffic spikes.",
       "learnMoreSlug": "caching-strategies",
-      "cost": { "yearlyOperational": 600, "oneTimeInvestment": 0 },
+      "cost": { "yearlyOperational": 600, "oneTimeInvestment": 500 },
       "appliesTo": [
         {
           "targetId": "api-db",
           "effects": { "latencyMs": -15, "bandwidthRps": 250, "failRate": -0.001 }
+        },
+        {
+          "targetId": "api",
+          "effects": { "failRate": 0.001 }
         }
       ]
     },
@@ -127,11 +135,15 @@
       "title": "Add Database Read Replica",
       "description": "Add a read replica for the database. Distributes read queries across two nodes, increasing read throughput and providing a failover target.",
       "learnMoreSlug": "database-replication",
-      "cost": { "yearlyOperational": 1200, "oneTimeInvestment": 0 },
+      "cost": { "yearlyOperational": 1200, "oneTimeInvestment": 1200 },
       "appliesTo": [
         {
           "targetId": "db",
           "effects": { "availability": 0.4, "throughputRps": 180, "latencyMs": -10 }
+        },
+        {
+          "targetId": "api-db",
+          "effects": { "failRate": 0.003 }
         }
       ]
     },
@@ -140,10 +152,47 @@
       "title": "Enable Health Checks & Auto-restart",
       "description": "Add liveness and readiness probes to all services. Unhealthy instances are detected and restarted automatically, reducing unplanned downtime across the entire system.",
       "learnMoreSlug": "health-checks",
-      "cost": { "yearlyOperational": 0, "oneTimeInvestment": 0 },
+      "cost": { "yearlyOperational": 400, "oneTimeInvestment": 300 },
       "appliesTo": [
-        { "targetId": "api", "effects": { "availability": 0.2 } },
-        { "targetId": "db", "effects": { "availability": 0.2 } }
+        { "targetId": "api", "effects": { "availability": 0.2, "latencyMs": 1 } },
+        { "targetId": "db", "effects": { "availability": 0.2, "latencyMs": 1 } }
+      ]
+    },
+    {
+      "id": "disable-caching",
+      "title": "Disable Redis Caching (Cost Saving)",
+      "description": "Remove the caching layer to cut operational costs. All queries go directly to the database, increasing load and latency during peak traffic.",
+      "learnMoreSlug": "cost-optimization",
+      "cost": { "yearlyOperational": -300, "oneTimeInvestment": 0 },
+      "appliesTo": [
+        {
+          "targetId": "api-db",
+          "effects": { "latencyMs": 35, "failRate": 0.003 }
+        }
+      ]
+    },
+    {
+      "id": "disable-health-monitoring",
+      "title": "Disable Health Monitoring (Cost Saving)",
+      "description": "Skip health checks and automated restarts to save on monitoring infrastructure. Failed instances remain down until manually detected.",
+      "learnMoreSlug": "cost-optimization",
+      "cost": { "yearlyOperational": -250, "oneTimeInvestment": -200 },
+      "appliesTo": [
+        { "targetId": "api", "effects": { "availability": -0.3, "failRate": 0.004 } },
+        { "targetId": "db", "effects": { "availability": -0.2, "failRate": 0.002 } }
+      ]
+    },
+    {
+      "id": "use-slower-database",
+      "title": "Migrate to Budget Database Instance",
+      "description": "Use a cheaper, slower database tier to reduce operational expenses. Reduced IOPS and smaller instance size increase query latency.",
+      "learnMoreSlug": "cost-optimization",
+      "cost": { "yearlyOperational": -400, "oneTimeInvestment": 0 },
+      "appliesTo": [
+        {
+          "targetId": "db",
+          "effects": { "latencyMs": 60, "throughputRps": -80, "failRate": 0.006 }
+        }
       ]
     }
   ]

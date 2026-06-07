@@ -58,8 +58,8 @@ function getTargetEffects(improvement: GameImprovement, labels: Record<string, s
 
 function formatCost(imp: GameImprovement): string {
   const parts: string[] = []
-  if (imp.cost.yearlyOperational > 0) parts.push(`$${imp.cost.yearlyOperational.toLocaleString('en-US')}/yr`)
-  if (imp.cost.oneTimeInvestment > 0) parts.push(`$${imp.cost.oneTimeInvestment.toLocaleString('en-US')} setup`)
+  if (imp.cost.yearlyOperational !== 0) parts.push(`$${imp.cost.yearlyOperational.toLocaleString('en-US')}/yr`)
+  if (imp.cost.oneTimeInvestment !== 0) parts.push(`$${imp.cost.oneTimeInvestment.toLocaleString('en-US')} setup`)
   return parts.length ? parts.join(' + ') : 'Free'
 }
 </script>

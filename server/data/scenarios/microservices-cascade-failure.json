@@ -187,11 +187,15 @@
       "title": "Add Circuit Breaker on Payment Service",
       "description": "Wrap calls to the Payment Service with a circuit breaker. When error rates exceed a threshold the circuit opens, failing fast instead of queueing threads — protecting the Order Service from cascading failure.",
       "learnMoreSlug": "circuit-breaker",
-      "cost": { "yearlyOperational": 0, "oneTimeInvestment": 0 },
+      "cost": { "yearlyOperational": 400, "oneTimeInvestment": 800 },
       "appliesTo": [
         {
           "targetId": "gateway-payment",
           "effects": { "latencyMs": -5, "failRate": -0.01 }
+        },
+        {
+          "targetId": "api-gateway",
+          "effects": { "latencyMs": 1 }
         }
       ]
     },
@@ -200,11 +204,15 @@
       "title": "Apply Bulkhead to Order Service",
       "description": "Isolate thread pools per dependency in the Order Service. A slow Payment Service can no longer exhaust the shared thread pool and block order processing.",
       "learnMoreSlug": "bulkhead-pattern",
-      "cost": { "yearlyOperational": 0, "oneTimeInvestment": 0 },
+      "cost": { "yearlyOperational": 600, "oneTimeInvestment": 1200 },
       "appliesTo": [
         {
           "targetId": "order-service",
           "effects": { "availability": 0.8, "throughputRps": 250, "latencyMs": -20 }
+        },
+        {
+          "targetId": "gateway-order",
+          "effects": { "latencyMs": 3, "failRate": 0.001 }
         }
       ]
     },
@@ -213,11 +221,15 @@
       "title": "Scale Payment Service",
       "description": "Run additional Payment Service instances to handle the high processing load and reduce per-instance latency.",
       "learnMoreSlug": "horizontal-scaling",
-      "cost": { "yearlyOperational": 1800, "oneTimeInvestment": 0 },
+      "cost": { "yearlyOperational": 1800, "oneTimeInvestment": 1500 },
       "appliesTo": [
         {
           "targetId": "payment-service",
           "effects": { "availability": 2.0, "throughputRps": 450, "latencyMs": -150 }
+        },
+        {
+          "targetId": "payment-provider-call",
+          "effects": { "failRate": 0.002 }
         }
       ]
     },
@@ -226,7 +238,7 @@
       "title": "Split Shared Database",
       "description": "Give each service its own database schema and connection pool. Eliminates resource contention between Order and Payment services on the shared database.",
       "learnMoreSlug": "database-per-service",
-      "cost": { "yearlyOperational": 2400, "oneTimeInvestment": 200 },
+      "cost": { "yearlyOperational": 2400, "oneTimeInvestment": 2000 },
       "appliesTo": [
         {
           "targetId": "order-db",
@@ -235,6 +247,14 @@
         {
           "targetId": "payment-db",
           "effects": { "throughputRps": 200, "latencyMs": -10, "failRate": -0.001 }
+        },
+        {
+          "targetId": "order-service",
+          "effects": { "latencyMs": 2 }
+        },
+        {
+          "targetId": "payment-service",
+          "effects": { "latencyMs": 2 }
         }
       ]
     },
@@ -243,7 +263,7 @@
       "title": "Async Payment via Queue",
       "description": "Decouple payment processing by publishing to a message queue. Orders are confirmed immediately; payment is processed asynchronously, eliminating synchronous wait time in the critical path.",
       "learnMoreSlug": "async-messaging",
-      "cost": { "yearlyOperational": 960, "oneTimeInvestment": 0 },
+      "cost": { "yearlyOperational": 960, "oneTimeInvestment": 1000 },
       "appliesTo": [
         {
           "targetId": "gateway-payment",
@@ -252,6 +272,10 @@
         {
           "targetId": "payment-service",
           "effects": { "throughputRps": 900 }
+        },
+        {
+          "targetId": "order-service",
+          "effects": { "failRate": 0.002 }
         }
       ]
     },
@@ -260,13 +284,52 @@
       "title": "Automated Health Checks Across All Services",
       "description": "Deploy health check probes and auto-restart policies across all services. Reduces mean time to recovery and improves baseline availability without impacting throughput.",
       "learnMoreSlug": "health-checks",
-      "cost": { "yearlyOperational": 0, "oneTimeInvestment": 0 },
+      "cost": { "yearlyOperational": 600, "oneTimeInvestment": 500 },
       "appliesTo": [
-        { "targetId": "api-gateway", "effects": { "availability": 0.1, "failRate": -0.0002 } },
-        { "targetId": "order-service", "effects": { "availability": 0.1, "failRate": -0.0002 } },
-        { "targetId": "payment-service", "effects": { "availability": 0.1, "failRate": -0.0002 } },
+        { "targetId": "api-gateway", "effects": { "availability": 0.1, "failRate": -0.0002, "latencyMs": 1 } },
+        { "targetId": "order-service", "effects": { "availability": 0.1, "failRate": -0.0002, "latencyMs": 1 } },
+        { "targetId": "payment-service", "effects": { "availability": 0.1, "failRate": -0.0002, "latencyMs": 1 } },
         { "targetId": "payment-provider", "effects": { "availability": 0.1, "failRate": -0.0002 } },
-        { "targetId": "db", "effects": { "availability": 0.1, "failRate": -0.0003 } }
+        { "targetId": "db", "effects": { "availability": 0.1, "failRate": -0.0003, "latencyMs": 1 } }
+      ]
+    },
+    {
+      "id": "reduce-payment-provider",
+      "title": "Switch to Budget Payment Provider",
+      "description": "Use a cheaper payment processor to cut operational costs. Their API is less stable and has higher latency.",
+      "learnMoreSlug": "cost-optimization",
+      "cost": { "yearlyOperational": -600, "oneTimeInvestment": 0 },
+      "appliesTo": [
+        {
+          "targetId": "payment-provider-call",
+          "effects": { "latencyMs": 80, "failRate": 0.008 }
+        }
+      ]
+    },
+    {
+      "id": "remove-circuit-breaker",
+      "title": "Remove Circuit Breaker (Cost Saving)",
+      "description": "Skip the circuit breaker implementation to save on development. Trades resilience for lower upfront investment.",
+      "learnMoreSlug": "cost-optimization",
+      "cost": { "yearlyOperational": -200, "oneTimeInvestment": -500 },
+      "appliesTo": [
+        {
+          "targetId": "gateway-payment",
+          "effects": { "failRate": 0.012 }
+        }
+      ]
+    },
+    {
+      "id": "reduce-db-replication",
+      "title": "Reduce Database Replication",
+      "description": "Run single database instance instead of replicated setup. Saves operational costs but increases risk of complete data loss and reduces read redundancy.",
+      "learnMoreSlug": "cost-optimization",
+      "cost": { "yearlyOperational": -800, "oneTimeInvestment": 0 },
+      "appliesTo": [
+        {
+          "targetId": "db",
+          "effects": { "availability": -0.15, "failRate": 0.005 }
+        }
       ]
     }
   ]
