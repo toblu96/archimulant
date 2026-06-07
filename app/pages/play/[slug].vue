@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { VueFlow, MarkerType } from '@vue-flow/core'
+import { MarkerType } from '@vue-flow/core'
 import type { GameScenario } from '~/composables/useGameSimulation'
 
 definePageMeta({
@@ -33,15 +33,14 @@ const {
   isTargetedByApplied
 } = useGameSimulation(scenario)
 
-// VueFlow nodes — updated whenever simulated state changes
 const flowNodes = computed(() =>
   simulatedNodes.value.map(node => ({
     id: node.id,
-    type: node.type,
+    type: node.type as 'person' | 'service' | 'database' | 'gateway' | 'externalSystem',
     position: node.position,
     data: {
       label: node.label,
-      nodeType: node.type,
+      nodeType: node.type as 'person' | 'service' | 'database' | 'gateway' | 'externalSystem',
       metrics: node.metrics,
       hasActiveImprovement: isTargetedByApplied(node.id)
     }
@@ -54,7 +53,6 @@ const flowEdges = computed(() =>
     source: edge.source,
     target: edge.target,
     label: edge.label,
-    type: 'smoothstep',
     animated: isTargetedByApplied(edge.id),
     style: { stroke: isTargetedByApplied(edge.id) ? 'var(--ui-primary)' : 'var(--ui-border)' },
     labelStyle: { fill: 'var(--ui-text-muted)', fontSize: '10px', fontFamily: 'inherit' },
@@ -100,32 +98,11 @@ watch(isWon, (won) => {
 
         <!-- Center: VueFlow canvas -->
         <div class="flex-1 relative min-w-0">
-          <ClientOnly>
-            <VueFlow
-              :nodes="flowNodes"
-              :edges="flowEdges"
-              :nodes-connectable="false"
-              :edges-updatable="false"
-              class="h-full"
-              @pane-ready="({ fitView }) => fitView()"
-            >
-              <template #node-person="props">
-                <GameFlowNode v-bind="props" />
-              </template>
-              <template #node-service="props">
-                <GameFlowNode v-bind="props" />
-              </template>
-              <template #node-database="props">
-                <GameFlowNode v-bind="props" />
-              </template>
-              <template #node-gateway="props">
-                <GameFlowNode v-bind="props" />
-              </template>
-              <template #node-externalSystem="props">
-                <GameFlowNode v-bind="props" />
-              </template>
-            </VueFlow>
-          </ClientOnly>
+          <GameFlowCanvas
+            :nodes="flowNodes"
+            :edges="flowEdges"
+            class="h-full"
+          />
         </div>
 
         <!-- Right panel: improvements -->
@@ -146,31 +123,11 @@ watch(isWon, (won) => {
             v-if="activeTab === 'canvas'"
             class="h-full"
           >
-            <ClientOnly>
-              <VueFlow
-                :nodes="flowNodes"
-                :edges="flowEdges"
-                :nodes-connectable="false"
-                :edges-updatable="false"
-                class="h-full"
-              >
-                <template #node-person="props">
-                  <GameFlowNode v-bind="props" />
-                </template>
-                <template #node-service="props">
-                  <GameFlowNode v-bind="props" />
-                </template>
-                <template #node-database="props">
-                  <GameFlowNode v-bind="props" />
-                </template>
-                <template #node-gateway="props">
-                  <GameFlowNode v-bind="props" />
-                </template>
-                <template #node-externalSystem="props">
-                  <GameFlowNode v-bind="props" />
-                </template>
-              </VueFlow>
-            </ClientOnly>
+            <GameFlowCanvas
+              :nodes="flowNodes"
+              :edges="flowEdges"
+              class="h-full"
+            />
           </div>
 
           <div

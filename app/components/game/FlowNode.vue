@@ -15,6 +15,8 @@ const props = defineProps<{
   id: string
   data: FlowNodeData
   selected: boolean
+  sourcePosition?: typeof Position[keyof typeof Position]
+  targetPosition?: typeof Position[keyof typeof Position]
 }>()
 
 const iconMap: Record<string, string> = {
@@ -25,28 +27,26 @@ const iconMap: Record<string, string> = {
   externalSystem: 'i-tabler-world'
 }
 
+const isExternal = props.data.nodeType === 'externalSystem' || props.data.nodeType === 'person'
+
 const borderClass = computed(() => {
-  if (props.selected) return 'border-(--ui-primary) ring-2 ring-(--ui-primary)/30'
-  if (props.data.hasActiveImprovement) return 'border-(--ui-primary)'
-  return 'border-(--ui-border)'
+  const dashed = isExternal ? 'border-dashed ' : ''
+  if (props.selected) return `${dashed}border-(--ui-primary) ring-2 ring-(--ui-primary)/30`
+  if (props.data.hasActiveImprovement) return `${dashed}border-(--ui-primary)`
+  return `${dashed}border-(--ui-border)`
 })
 </script>
 
 <template>
   <Handle
     type="target"
-    :position="Position.Top"
-    class="opacity-0! w-2! h-2!"
-  />
-  <Handle
-    type="target"
-    :position="Position.Left"
+    :position="targetPosition ?? Position.Top"
     class="opacity-0! w-2! h-2!"
   />
 
   <div
-    class="relative rounded-lg border bg-default px-3 py-2 min-w-32 shadow-sm transition-colors"
-    :class="borderClass"
+    class="relative rounded-lg border px-3 py-2 min-w-32 shadow-sm transition-colors"
+    :class="[borderClass, isExternal ? 'bg-muted' : 'bg-default']"
   >
     <div class="flex items-center gap-2 mb-1">
       <UIcon
@@ -91,12 +91,7 @@ const borderClass = computed(() => {
 
   <Handle
     type="source"
-    :position="Position.Bottom"
-    class="opacity-0! w-2! h-2!"
-  />
-  <Handle
-    type="source"
-    :position="Position.Right"
+    :position="sourcePosition ?? Position.Bottom"
     class="opacity-0! w-2! h-2!"
   />
 </template>
