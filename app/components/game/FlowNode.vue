@@ -29,7 +29,7 @@ const iconMap: Record<string, string> = {
 
 const metricIconMap: Record<string, string> = {
   availability: 'i-tabler-shield-check',
-  throughputRps: 'i-tabler-activity',
+  throughputRps: 'i-tabler-gauge',
   latencyMs: 'i-tabler-stopwatch'
 }
 
@@ -85,7 +85,7 @@ const borderClass = computed(() => {
         size="xs"
         :icon="metricIconMap.throughputRps"
       >
-        {{ data.metrics.throughputRps }}
+        {{ data.metrics.throughputRps }} RPS
       </UBadge>
       <UBadge
         v-if="data.metrics.latencyMs !== undefined"

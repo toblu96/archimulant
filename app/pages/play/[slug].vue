@@ -76,7 +76,7 @@ const topologyLabels = computed<Record<string, string>>(() => {
 const activeTab = ref('canvas')
 const mobileTabs = [
   { label: 'Canvas', value: 'canvas', icon: 'i-tabler-network' },
-  { label: 'Metrics', value: 'metrics', icon: 'i-tabler-activity' },
+  { label: 'Metrics', value: 'metrics', icon: 'i-tabler-gauge' },
   { label: 'Improve', value: 'improvements', icon: 'i-tabler-tool' }
 ]
 

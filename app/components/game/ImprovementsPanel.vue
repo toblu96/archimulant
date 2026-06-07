@@ -24,10 +24,10 @@ function formatEffect(key: keyof GameMetrics, value: number): string {
 
 function effectIcon(key: keyof GameMetrics): string {
   if (key === 'availability') return 'i-tabler-shield-check'
-  if (key === 'throughputRps' || key === 'requestsPerSecond') return 'i-tabler-activity'
+  if (key === 'throughputRps' || key === 'requestsPerSecond') return 'i-tabler-gauge'
   if (key === 'latencyMs') return 'i-tabler-stopwatch'
   if (key === 'failRate') return 'i-tabler-cross'
-  return 'i-tabler-activity'
+  return 'i-tabler-gauge'
 }
 function effectDescription(key: keyof GameMetrics): string {
   if (key === 'availability') return 'Availability'

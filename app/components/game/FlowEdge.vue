@@ -36,7 +36,7 @@ const path = computed(() =>
 
 const metricIconMap: Record<string, string> = {
   latencyMs: 'i-tabler-stopwatch',
-  bandwidthRps: 'i-tabler-activity',
+  bandwidthRps: 'i-tabler-gauge',
   failRate: 'i-tabler-cross'
 }
 

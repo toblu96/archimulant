@@ -36,7 +36,7 @@ definePageMeta({
       description="Archimulant makes software architecture tangible. No theory slides — just a system to improve and metrics that respond to every decision."
       :features="[
         {
-          icon: 'i-tabler-network',
+          icon: 'i-tabler-heart-rate-monitor',
           title: 'Simulate a live system',
           description: 'Work with an interactive topology of services, databases, and queues. Apply improvements like caching, replication, and circuit breakers under a fixed budget and watch the numbers move.'
         },

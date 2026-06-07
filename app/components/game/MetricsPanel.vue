@@ -51,7 +51,7 @@ const metricRows = computed((): MetricRow[] => {
     const current = m.throughputRps ?? 0
     rows.push({
       label: 'Throughput',
-      icon: 'i-tabler-activity',
+      icon: 'i-tabler-gauge',
       current: `${current.toFixed(0)} RPS`,
       target: `≥ ${targetMetrics.throughputRps} RPS`,
       met: current >= targetMetrics.throughputRps
@@ -226,7 +226,7 @@ const setupBudgetPct = computed(() =>
         <div class="space-y-2">
           <div class="flex items-center gap-2">
             <UIcon
-              name="i-tabler-activity"
+              name="i-tabler-gauge"
               class="size-4 text-muted shrink-0"
             />
             <span class="text-sm font-semibold text-default">Throughput</span>
