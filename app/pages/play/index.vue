@@ -62,14 +62,14 @@ const difficultyColor = (d: string) =>
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-1.5 text-sm text-muted">
               <UIcon
-                name="i-lucide-clock"
-                class="size-4"
+                name="i-tabler-clock"
+                class="size-5"
               />
               ~{{ s.meta.estimatedMinutes }} min
             </div>
             <UButton
               :to="`/play/${s.id}`"
-              trailing-icon="i-lucide-arrow-right"
+              trailing-icon="i-tabler-arrow-right"
             >
               Play
             </UButton>

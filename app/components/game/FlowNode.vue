@@ -18,11 +18,11 @@ const props = defineProps<{
 }>()
 
 const iconMap: Record<string, string> = {
-  person: 'i-lucide-monitor',
-  service: 'i-lucide-server',
-  database: 'i-lucide-database',
-  gateway: 'i-lucide-shield',
-  externalSystem: 'i-lucide-globe'
+  person: 'i-tabler-device-desktop',
+  service: 'i-tabler-server',
+  database: 'i-tabler-database',
+  gateway: 'i-tabler-shield',
+  externalSystem: 'i-tabler-world'
 }
 
 const borderClass = computed(() => {
@@ -50,7 +50,7 @@ const borderClass = computed(() => {
   >
     <div class="flex items-center gap-2 mb-1">
       <UIcon
-        :name="iconMap[data.nodeType] ?? 'i-lucide-box'"
+        :name="iconMap[data.nodeType] ?? 'i-tabler-box'"
         class="size-3.5 shrink-0 text-muted"
         :class="{ 'text-primary!': data.hasActiveImprovement }"
       />

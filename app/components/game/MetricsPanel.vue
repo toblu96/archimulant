@@ -27,7 +27,7 @@ const metricRows = computed((): MetricRow[] => {
     const current = m.availability ?? 0
     rows.push({
       label: 'Availability',
-      icon: 'i-lucide-shield-check',
+      icon: 'i-tabler-shield-check',
       current: `${current.toFixed(2)}%`,
       target: `≥ ${targetMetrics.availability}%`,
       met: current >= targetMetrics.availability
@@ -38,7 +38,7 @@ const metricRows = computed((): MetricRow[] => {
     const current = m.latencyMs ?? 0
     rows.push({
       label: 'Latency P95',
-      icon: 'i-lucide-timer',
+      icon: 'i-tabler-stopwatch',
       current: `${current.toFixed(0)}ms`,
       target: `≤ ${targetMetrics.latencyMs}ms`,
       met: current <= targetMetrics.latencyMs
@@ -49,7 +49,7 @@ const metricRows = computed((): MetricRow[] => {
     const current = m.throughputRps ?? 0
     rows.push({
       label: 'Throughput',
-      icon: 'i-lucide-activity',
+      icon: 'i-tabler-activity',
       current: `${current.toFixed(0)} RPS`,
       target: `≥ ${targetMetrics.throughputRps} RPS`,
       met: current >= targetMetrics.throughputRps
@@ -73,11 +73,10 @@ const setupBudgetPct = computed(() =>
     <!-- Win banner -->
     <UAlert
       v-if="isWon"
-      icon="i-lucide-trophy"
+      icon="i-tabler-trophy"
       color="success"
       variant="soft"
       title="All targets met!"
-      description="You can keep optimizing or exit."
     />
 
     <!-- Metrics -->
@@ -94,12 +93,12 @@ const setupBudgetPct = computed(() =>
           <div class="flex items-center gap-2 mb-2">
             <UIcon
               :name="row.icon"
-              class="size-4 shrink-0 text-muted"
+              class="size-5 shrink-0 text-muted"
             />
             <span class="text-sm font-medium text-default">{{ row.label }}</span>
             <UIcon
-              :name="row.met ? 'i-lucide-check-circle' : 'i-lucide-x-circle'"
-              class="size-4 ml-auto shrink-0"
+              :name="row.met ? 'i-tabler-checkbox' : 'i-tabler-circle-x'"
+              class="size-5 ml-auto shrink-0"
               :class="row.met ? 'text-success-500' : 'text-error-500'"
             />
           </div>

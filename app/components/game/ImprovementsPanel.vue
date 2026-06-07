@@ -68,7 +68,7 @@ function formatCost(imp: GameImprovement): string {
             <span class="text-sm font-medium text-default leading-snug">{{ imp.title }}</span>
             <UButton
               size="sm"
-              icon="i-lucide-plus"
+              icon="i-tabler-plus"
               color="primary"
               variant="soft"
               class="shrink-0"
@@ -119,14 +119,14 @@ function formatCost(imp: GameImprovement): string {
           <div class="flex items-center justify-between gap-2 mb-2">
             <div class="flex items-center gap-2 min-w-0">
               <UIcon
-                name="i-lucide-check-circle"
+                name="i-tabler-checkbox"
                 class="size-4 text-primary shrink-0"
               />
               <span class="text-sm font-medium text-default truncate">{{ imp.title }}</span>
             </div>
             <UButton
               size="sm"
-              icon="i-lucide-x"
+              icon="i-tabler-x"
               color="neutral"
               variant="ghost"
               class="shrink-0"

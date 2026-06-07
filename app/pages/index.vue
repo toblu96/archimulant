@@ -16,7 +16,7 @@ definePageMeta({
         {
           label: 'Try a scenario',
           to: '/play',
-          trailingIcon: 'i-lucide-arrow-right',
+          trailingIcon: 'i-tabler-arrow-right',
           size: 'lg'
         },
         {
@@ -36,17 +36,17 @@ definePageMeta({
       description="Archimulant makes software architecture tangible. No theory slides — just a system to improve and metrics that respond to every decision."
       :features="[
         {
-          icon: 'i-lucide-network',
+          icon: 'i-tabler-network',
           title: 'Simulate a live system',
           description: 'Work with an interactive topology of services, databases, and queues. Apply improvements like caching, replication, and circuit breakers under a fixed budget and watch the numbers move.'
         },
         {
-          icon: 'i-lucide-graduation-cap',
+          icon: 'i-tabler-school',
           title: 'Learn the patterns behind it',
           description: 'Every improvement links to the architectural theory. Understand availability math, latency paths, and throughput bottlenecks — not just which button clicks.'
         },
         {
-          icon: 'i-lucide-trophy',
+          icon: 'i-tabler-trophy',
           title: 'Compete in tournaments',
           description: 'Create a tournament room, share a join code, and challenge your team or class to solve the same scenario. Who builds the best architecture under the same constraints?'
         }
@@ -62,7 +62,7 @@ definePageMeta({
           {
             label: 'Play now',
             to: '/play',
-            trailingIcon: 'i-lucide-arrow-right'
+            trailingIcon: 'i-tabler-arrow-right'
           },
           {
             label: 'Read the docs',

@@ -66,9 +66,9 @@ const flowEdges = computed(() =>
 // Mobile tab
 const activeTab = ref('canvas')
 const mobileTabs = [
-  { label: 'Canvas', value: 'canvas', icon: 'i-lucide-network' },
-  { label: 'Metrics', value: 'metrics', icon: 'i-lucide-activity' },
-  { label: 'Improve', value: 'improvements', icon: 'i-lucide-wrench' }
+  { label: 'Canvas', value: 'canvas', icon: 'i-tabler-network' },
+  { label: 'Metrics', value: 'metrics', icon: 'i-tabler-activity' },
+  { label: 'Improve', value: 'improvements', icon: 'i-tabler-tool' }
 ]
 
 // Win modal
@@ -239,7 +239,7 @@ watch(isWon, (won) => {
               class="flex items-center gap-2 text-sm"
             >
               <UIcon
-                name="i-lucide-check"
+                name="i-tabler-check"
                 class="size-4 text-success-500 shrink-0"
               />
               {{ imp.title }}
@@ -258,7 +258,7 @@ watch(isWon, (won) => {
         </UButton>
         <UButton
           to="/play"
-          trailing-icon="i-lucide-arrow-right"
+          trailing-icon="i-tabler-arrow-right"
         >
           Next scenario
         </UButton>

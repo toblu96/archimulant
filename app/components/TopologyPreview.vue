@@ -339,7 +339,7 @@
         <UBadge
           color="primary"
           variant="soft"
-          icon="i-lucide-plus-circle"
+          icon="i-tabler-circle-plus"
         >
           Cache added
         </UBadge>

@@ -35,7 +35,7 @@ const providers = ref<ButtonProps[]>([
       <UAuthForm
         title="Welcome back!"
         description="Choose your favorite provider to login."
-        icon="i-lucide-user"
+        icon="i-tabler-user"
         :providers="providers"
         class="max-w-md"
       />
