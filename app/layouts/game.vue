@@ -6,6 +6,7 @@
       </template>
 
       <template #right>
+        <UColorModeButton />
         <UButton
           to="/play"
           variant="ghost"

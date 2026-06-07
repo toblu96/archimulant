@@ -58,8 +58,8 @@ const flowEdges = computed(() =>
       type: 'metric',
       data: { label: edge.label, metrics: edge.metrics },
       animated: active,
-      style: { stroke: active ? 'var(--ui-primary)' : 'var(--ui-border)' },
-      markerEnd: { type: MarkerType.ArrowClosed, color: active ? 'var(--ui-primary)' : 'var(--ui-border)' }
+      style: { stroke: active ? 'var(--ui-primary)' : '' },
+      markerEnd: { type: MarkerType.ArrowClosed, color: active ? 'var(--ui-primary)' : '' }
     }
   })
 )
@@ -112,7 +112,7 @@ watch(isWon, (won) => {
           <GameFlowCanvas
             :nodes="flowNodes"
             :edges="flowEdges"
-            class="h-full"
+            class="h-full bg-elevated"
           />
         </div>
 

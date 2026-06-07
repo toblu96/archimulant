@@ -69,7 +69,7 @@ const badges = computed(() => {
       <div class="flex flex-col">
         <div
           v-if="data.label"
-          class="text-xs font-medium px-1.5 py-0.5 rounded bg-default/90 whitespace-nowrap transition-colors"
+          class="text-xs font-medium px-1.5 py-0.5 rounded bg-elevated whitespace-nowrap transition-colors"
           :class="animated ? 'text-primary' : 'text-muted'"
         >
           {{ data.label }}

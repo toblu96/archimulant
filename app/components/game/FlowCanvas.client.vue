@@ -74,7 +74,7 @@ const panelActions = [
   >
     <Panel
       position="top-right"
-      class="flex border border-default"
+      class="flex border border-accented bg-elevated"
     >
       <UButton
         v-for="action in panelActions"
@@ -82,7 +82,7 @@ const panelActions = [
         :icon="action.icon"
         color="neutral"
         variant="ghost"
-        class="shrink-0"
+        class="shrink-0 hover:bg-accented active:bg-accented"
         @click="action.click"
       />
     </Panel>

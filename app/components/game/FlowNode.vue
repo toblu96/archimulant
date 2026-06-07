@@ -52,7 +52,7 @@ const borderClass = computed(() => {
 
   <div
     class="relative rounded-lg border px-3 py-2 min-w-32 shadow-sm transition-colors"
-    :class="[borderClass, isExternal ? 'bg-muted' : 'bg-default']"
+    :class="[borderClass, isExternal ? 'bg-muted dark:bg-accented' : 'bg-default']"
   >
     <div class="flex items-center gap-2 mb-1">
       <UIcon
@@ -67,7 +67,7 @@ const borderClass = computed(() => {
 
     <div
       v-if="data.nodeType !== 'person'"
-      class="flex flex-wrap gap-1"
+      class="flex flex-wrap gap-1 mt-2"
     >
       <UBadge
         v-if="data.metrics.availability !== undefined"
