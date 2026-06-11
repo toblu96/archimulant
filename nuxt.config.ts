@@ -33,7 +33,8 @@ export default defineNuxtConfig({
     optimizeDeps: {
       include: [
         'better-auth/vue',
-        '@vue-flow/core'
+        '@vue-flow/core',
+        '@dagrejs/dagre'
       ]
     }
   },
@@ -44,5 +45,10 @@ export default defineNuxtConfig({
         braceStyle: '1tbs'
       }
     }
+  },
+  evlog: {
+    exclude: [
+      '/api/_**'
+    ]
   }
 })
