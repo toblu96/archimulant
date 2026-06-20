@@ -4,8 +4,6 @@ services:
       context: .
       dockerfile: Dockerfile
     image: archimulant:latest
-    ports:
-      - '3000:3000'
     environment:
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:-}
       NUXT_SCENARIOS_DIR: ${NUXT_SCENARIOS_DIR:-server/data/scenarios}
