@@ -18,9 +18,6 @@ export default defineNuxtConfig({
       database: { filePath: '.data/auth.db' }
     }
   },
-  routeRules: {
-    '/': { prerender: true }
-  },
   compatibilityDate: '2025-01-15',
   nitro: {
     experimental: {
