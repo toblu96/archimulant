@@ -7,6 +7,7 @@ services:
     ports:
       - '3000:3000'
     environment:
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:-}
       NUXT_SCENARIOS_DIR: ${NUXT_SCENARIOS_DIR:-server/data/scenarios}
       NUXT_AUTH_DATABASE_FILE_PATH: ${NUXT_AUTH_DATABASE_FILE_PATH:-.data/auth.db}
       NUXT_AUTH_AUTO_MIGRATE: ${NUXT_AUTH_AUTO_MIGRATE:-true}
