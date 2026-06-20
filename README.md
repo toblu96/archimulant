@@ -1,64 +1,121 @@
-# Nuxt Starter Template
+# Archimulant
 
-[![Nuxt UI](https://img.shields.io/badge/Made%20with-Nuxt%20UI-00DC82?logo=nuxt&labelColor=020420)](https://ui.nuxt.com)
+![Archimulant Banner](./docs/img/banner.png)
 
-Use this template to get started with [Nuxt UI](https://ui.nuxt.com) quickly.
+Archimulant is an interactive architecture simulator designed to make software architecture tangible and fun. Rather than memorizing patterns in lectures or reading whitepapers, you **play scenarios, make trade-offs, and feel the impact immediately**.
 
-- [Live demo](https://starter-template.nuxt.dev/)
-- [Documentation](https://ui.nuxt.com/docs/getting-started/installation/nuxt)
+### The Game
 
-<a href="https://starter-template.nuxt.dev/" target="_blank">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://ui.nuxt.com/assets/templates/nuxt/starter-dark.png">
-    <source media="(prefers-color-scheme: light)" srcset="https://ui.nuxt.com/assets/templates/nuxt/starter-light.png">
-    <img alt="Nuxt Starter Template" src="https://ui.nuxt.com/assets/templates/nuxt/starter-light.png" width="830" height="466">
-  </picture>
-</a>
+Pick a real-world scenario (e.g., *"E-Commerce Peak Traffic Collapse"* or *"Microservices Cascade Failure"*), then improve the system within a fixed budget:
 
-> The starter template for Vue is on https://github.com/nuxt-ui-templates/starter-vue.
+- 🏗️ **Live topology**: Interact with a visual system diagram of services, databases, gateways, and queues
+- 📊 **Real-time metrics**: Watch availability, latency, throughput, and cost shift as you apply improvements
+- 💰 **Budget constraints**: Balance operational costs (yearly) vs. one-time investments. There are no infinite resources
+- 🎲 **Trade-offs everywhere**: Add caching → reduces latency but risks consistency issues; scale horizontally → costs money and adds coordination complexity
+- 🏆 **Compete**: Create tournament rooms, invite your team or class, and compete on the same scenario
 
-## Quick Start
+### The Learning
 
-```bash [Terminal]
-npm create nuxt@latest -- -t ui
-```
+Every improvement links to architectural theory:
 
-## Deploy your own
+- Circuit breakers, bulkheads, replication, caching, async messaging, health checks
+- Understand *why* each pattern works and *when* to use it
+- See the math behind availability, latency paths, and throughput bottlenecks
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-name=starter&repository-url=https%3A%2F%2Fgithub.com%2Fnuxt-ui-templates%2Fstarter&demo-image=https%3A%2F%2Fui.nuxt.com%2Fassets%2Ftemplates%2Fnuxt%2Fstarter-dark.png&demo-url=https%3A%2F%2Fstarter-template.nuxt.dev%2F&demo-title=Nuxt%20Starter%20Template&demo-description=A%20minimal%20template%20to%20get%20started%20with%20Nuxt%20UI.)
+## Documentation
 
-## Setup
+Explore the architecture and design decisions:
 
-Make sure to install the dependencies:
+- **[Arc42 System Architecture](./docs/arc42/arc42.md)**: Full system overview, design decisions, deployment, risks
+- **[Vision & Requirements](./docs/vision/README.md)**: Why Archimulant exists, user personas, assumptions
+- **[UI Structure & Routing](./docs/design/ui-structure.md)**: Frontend layout, page hierarchy, navigation flow
+
+---
+
+## Development Setup
+
+### Prerequisites
+
+- **Node.js 18+**
+- **pnpm 9+**
+- A modern browser (Chrome, Firefox, Safari, Edge)
+
+### Environment Variables
+
+Copy `.env.example` to `.env.local` and customize. 
+
+Nuxt automatically maps environment variables with the `NUXT_` prefix to `runtimeConfig` keys.
+
+> [!note]
+> Check out [`./nuxt.config.ts`](./nuxt.config.ts) for default values and reuse [`./.env.example`](./.env.example) for your local setup.
+
+### Install & Run
 
 ```bash
+# Install dependencies
 pnpm install
-```
 
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
+# Start the dev server
 pnpm dev
 ```
 
-## Production
+The app opens at `http://localhost:3000`.
 
-Build the application for production:
+### Database & Authentication
+
+#### SQLite
+
+Archimulant uses **SQLite** for persistence (no external database required). The database file lives at `.data/auth.db` by default.
+
+#### Better-auth Setup
+
+Authentication uses **better-auth** with OAuth support (Google, GitHub). To configure:
+
+1. **Generate the schema** (if models changed):
+   ```bash
+   pnpm auth:generate
+   ```
+
+2. **Apply migrations**:
+   ```bash
+   pnpm auth:migrate
+   ```
+
+3. **Configure providers** in `auth.config.ts` (copy `.env.example` to `.env.local` and fill in OAuth credentials if needed for local testing).
+
+### Hexagonal Architecture
+
+The codebase follows **Hexagonal Architecture (Ports & Adapters)** with strict dependency rules:
+
+```
+adapters ──► ports ◄── application ──► domain
+                          │
+                          └─► domain (pure TS, no I/O)
+```
+
+Key folders:
+
+- **`server/domain/`**: Business logic, types, invariants (pure TypeScript, zero framework imports)
+- **`server/ports/`**: Interfaces for repositories, loggers, external services
+- **`server/application/`**: Use cases that orchestrate ports and domain logic
+- **`server/adapters/`**: Implementations of ports (database, HTTP clients, auth)
+- **`server/api/`**: HTTP endpoints (thin translation layer)
+
+Dependencies flow inward only. A domain type never imports from an adapter; an adapter never calls a use case directly.
+
+
+### Building & Deployment
+
+#### Build for Production
 
 ```bash
 pnpm build
 ```
 
-Locally preview production build:
+Generates optimized bundles in `.output/`.
+
+#### Preview Production Build Locally
 
 ```bash
 pnpm preview
 ```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
-
-## Renovate integration
-
-Install [Renovate GitHub app](https://github.com/apps/renovate/installations/select_target) on your repository and you are good to go.
