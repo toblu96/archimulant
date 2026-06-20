@@ -3,8 +3,6 @@ RUN corepack enable
 WORKDIR /app
 
 FROM base AS deps
-# python3/make/g++ are needed to build the better-sqlite3 native addon
-RUN apk add --no-cache python3 make g++
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN pnpm install --frozen-lockfile
 

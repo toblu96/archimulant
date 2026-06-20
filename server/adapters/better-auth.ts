@@ -1,10 +1,10 @@
 // server/adapters/outbound/better-auth.ts
 import { mkdirSync } from 'node:fs'
 import { dirname } from 'node:path'
+import { DatabaseSync } from 'node:sqlite'
 import { betterAuth } from 'better-auth'
 import type { SessionResolver } from '~~/server/ports/session-resolver'
 import { UserId } from '~~/server/domain/auth/user'
-import Database from 'better-sqlite3'
 
 export interface AuthAdapterConfig {
   google: { clientId: string, clientSecret: string }
@@ -22,7 +22,7 @@ export const createAuthInstance = (config: AuthAdapterConfig = { google: { clien
         clientSecret: config.github.clientSecret
       }
     },
-    database: new Database(config.database.filePath)
+    database: new DatabaseSync(config.database.filePath)
   })
 }
 export default createAuthInstance
