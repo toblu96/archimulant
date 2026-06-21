@@ -52,43 +52,47 @@ const groups = computed(() =>
           </div>
 
           <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            <UCard
+            <NuxtLink
               v-for="page in group.pages"
               :key="page.path"
-              class="flex flex-col"
-              :ui="{ body: 'flex flex-col flex-1 gap-3' }"
+              :to="page.path"
+              class="flex h-full"
             >
-              <h3 class="text-lg font-semibold text-default">
-                {{ page.title }}
-              </h3>
-              <p class="text-muted leading-relaxed flex-1">
-                {{ page.summary }}
-              </p>
-
-              <div
-                v-if="page.tags?.length"
-                class="flex flex-wrap gap-2"
+              <UCard
+                class="flex flex-col h-full w-full transition-colors hover:bg-elevated/50 hover:ring-primary"
+                :ui="{ body: 'flex flex-col flex-1 gap-3' }"
               >
-                <UBadge
-                  v-for="tag in page.tags"
-                  :key="tag"
-                  color="neutral"
-                  variant="soft"
-                >
-                  {{ tag }}
-                </UBadge>
-              </div>
+                <h3 class="text-lg font-semibold text-default">
+                  {{ page.title }}
+                </h3>
+                <p class="text-muted leading-relaxed flex-1">
+                  {{ page.summary }}
+                </p>
 
-              <div class="flex justify-end">
-                <UButton
-                  :to="page.path"
-                  variant="soft"
-                  trailing-icon="i-tabler-arrow-right"
+                <div
+                  v-if="page.tags?.length"
+                  class="flex flex-wrap gap-2"
                 >
-                  Read
-                </UButton>
-              </div>
-            </UCard>
+                  <UBadge
+                    v-for="tag in page.tags"
+                    :key="tag"
+                    color="neutral"
+                    variant="soft"
+                  >
+                    {{ tag }}
+                  </UBadge>
+                </div>
+
+                <div class="flex justify-end">
+                  <UButton
+                    variant="soft"
+                    trailing-icon="i-tabler-arrow-right"
+                  >
+                    Read
+                  </UButton>
+                </div>
+              </UCard>
+            </NuxtLink>
           </div>
         </section>
       </div>

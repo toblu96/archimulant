@@ -25,56 +25,60 @@ const difficultyColor = (d: string) =>
         v-if="scenarios"
         class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
       >
-        <UCard
+        <NuxtLink
           v-for="s in scenarios"
           :key="s.id"
-          class="flex flex-col"
-          :ui="{ body: 'flex flex-col flex-1 gap-4' }"
+          :to="`/play/${s.id}`"
+          class="flex h-full"
         >
-          <div class="flex items-start justify-between gap-3">
-            <h3 class="text-lg font-semibold text-default">
-              {{ s.meta.title }}
-            </h3>
-            <UBadge
-              :color="difficultyColor(s.meta.difficulty)"
-              variant="soft"
-              class="shrink-0 capitalize"
-            >
-              {{ s.meta.difficulty }}
-            </UBadge>
-          </div>
-
-          <p class="text-muted leading-relaxed flex-1">
-            {{ s.meta.description }}
-          </p>
-
-          <div class="flex flex-wrap gap-2">
-            <UBadge
-              v-for="tag in s.meta.tags"
-              :key="tag"
-              color="neutral"
-              variant="soft"
-            >
-              {{ tag }}
-            </UBadge>
-          </div>
-
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-1.5 text-sm text-muted">
-              <UIcon
-                name="i-tabler-clock"
-                class="size-5"
-              />
-              ~{{ s.meta.estimatedMinutes }} min
+          <UCard
+            class="flex flex-col h-full w-full transition-colors hover:bg-elevated/50 hover:ring-primary"
+            :ui="{ body: 'flex flex-col flex-1 gap-4' }"
+          >
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="text-lg font-semibold text-default">
+                {{ s.meta.title }}
+              </h3>
+              <UBadge
+                :color="difficultyColor(s.meta.difficulty)"
+                variant="soft"
+                class="shrink-0 capitalize"
+              >
+                {{ s.meta.difficulty }}
+              </UBadge>
             </div>
-            <UButton
-              :to="`/play/${s.id}`"
-              trailing-icon="i-tabler-arrow-right"
-            >
-              Play
-            </UButton>
-          </div>
-        </UCard>
+
+            <p class="text-muted leading-relaxed flex-1">
+              {{ s.meta.description }}
+            </p>
+
+            <div class="flex flex-wrap gap-2">
+              <UBadge
+                v-for="tag in s.meta.tags"
+                :key="tag"
+                color="neutral"
+                variant="soft"
+              >
+                {{ tag }}
+              </UBadge>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-1.5 text-sm text-muted">
+                <UIcon
+                  name="i-tabler-clock"
+                  class="size-5"
+                />
+                ~{{ s.meta.estimatedMinutes }} min
+              </div>
+              <UButton
+                trailing-icon="i-tabler-arrow-right"
+              >
+                Play
+              </UButton>
+            </div>
+          </UCard>
+        </NuxtLink>
       </div>
 
       <div
