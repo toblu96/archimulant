@@ -109,6 +109,19 @@ function formatCost(imp: GameImprovement): string {
               {{ formatCost(imp) }}
             </span>
           </div>
+
+          <ULink
+            v-if="imp.learnMoreSlug"
+            :to="`/learn/${imp.learnMoreSlug}`"
+            target="_blank"
+            class="mt-2 inline-flex items-center gap-1 text-xs text-primary hover:underline"
+          >
+            <UIcon
+              name="i-tabler-book-2"
+              class="size-3.5"
+            />
+            Learn more
+          </ULink>
         </div>
       </div>
     </div>
@@ -188,6 +201,18 @@ function formatCost(imp: GameImprovement): string {
             <span class="text-xs text-muted font-mono shrink-0 ml-auto">
               {{ formatCost(imp) }}
             </span>
+            <ULink
+              v-if="imp.learnMoreSlug"
+              :to="`/learn/${imp.learnMoreSlug}`"
+              target="_blank"
+              class="inline-flex items-center gap-1 text-xs text-primary hover:underline"
+            >
+              <UIcon
+                name="i-tabler-book-2"
+                class="size-3.5"
+              />
+              Learn more
+            </ULink>
           </div>
         </div>
       </div>

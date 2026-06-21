@@ -124,7 +124,7 @@ C4Context
 | Decision                       | Choice                                                                                     | Rationale                                                                                                          |
 | ------------------------------ | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ |
 | System topology representation | Directed graph (nodes + edges)                                                             | Natural fit for service dependencies; maps to VueFlow primitives                                                   |
-| Content model                  | JSON data files                                                                            | Allows easy understanding and adjustability directly without UI, trackable in git                                  |
+| Content model                  | JSON data files (scenarios) + Markdown (learn section)                                      | Scenarios stay as structured JSON served by the backend; long-form learn content authored in Markdown via Nuxt Content. Both trackable in git, editable without UI |
 | Architecture pattern           | Modular Frontend + Backend API + Simulation Engine, implemented as Monolith for simplicity | Clear separation; simulation engine is independently testable                                                      |
 | Architecture documentation     | C4 model (Context, Container, Component, Code)                                             | Tool-independent, scales from business context to code level, widely understood. Omits code level for this project |
 | Auth technology                | [Better-Auth](https://better-auth.com/) as part of backend service                         | No separate auth service needed, implemented based on a library as part of monolith                                |
@@ -169,6 +169,8 @@ C4Container
 
 The backend follows a **hexagonal architecture** (Ports and Adapters). The application core contains all business logic and is isolated from infrastructure. Primary adapters drive the core from outside (REST, WebSocket); the DB Adapter implements the outbound persistence port. Authentication is handled directly by Better-Auth within the Auth Module, which integrates with Google OAuth without a separate adapter layer.
 
+The **learn section is intentionally not a backend concern**. Its content is static, public, and prose-heavy, so it is authored as Markdown and rendered by the frontend at build time via Nuxt Content (see [ADR-005](#9-architecture-decisions)). No backend component reads or serves theory content.
+
 ```mermaid
 C4Component
     title Component Diagram - Backend API (Hexagonal Architecture)
@@ -179,7 +181,6 @@ C4Component
         Component(scenarioModule, "Scenario Module", "TypeScript", "Use cases for reading and managing predefined and custom scenarios")
         Component(tournamentModule, "Tournament Module", "TypeScript", "Use cases for create, join, start, end; computes and exposes leaderboard")
         Component(authModule, "Auth Module", "Better-Auth", "Use cases for host authentication, session handling, and access control")
-        Component(contentLoader, "Content Loader", "TypeScript", "Reads static theory content and architectural pattern documentation from JSON files")
 
         Component(dbAdapter, "DB Adapter", "libsql", "Secondary adapter: implements persistence port against SQLite database")
     }
@@ -190,7 +191,6 @@ C4Component
     Rel(httpAdapter, scenarioModule, "Calls")
     Rel(httpAdapter, tournamentModule, "Calls")
     Rel(httpAdapter, authModule, "Calls")
-    Rel(httpAdapter, contentLoader, "Calls")
 
     Rel(scenarioModule, dbAdapter, "Persists via")
     Rel(tournamentModule, dbAdapter, "Persists via")
@@ -270,7 +270,14 @@ The simulation engine is a pure function: `simulate(system, improvements) → me
 
 ### 8.2 Content-as-Data
 
-All scenarios, improvements, and learn section content are stored as structured JSON data files under `content/`. No content is hardcoded in components or API handlers. This allows the content to evolve independently of the application code.
+All content is data, not code - it evolves independently of the application and is editable without touching components or handlers. Two stores serve two shapes of content:
+
+| Content              | Format & location                  | Served by                                  | Rationale                                                                 |
+| -------------------- | ---------------------------------- | ------------------------------------------ | ------------------------------------------------------------------------- |
+| Scenarios & improvements | JSON under `server/data/scenarios/` | Backend API (Scenario Module + DB Adapter) | Structured, validated against a domain schema, queried at runtime          |
+| Learn section        | Markdown under `content/learn/`    | Frontend at build time (Nuxt Content)      | Prose-heavy; benefits from Markdown authoring and embeddable components     |
+
+The learn section links bidirectionally to gameplay: each improvement carries a `learnMoreSlug` that resolves to `/learn/<slug>`, and each learn page lists the scenarios that exercise it (`usedIn` frontmatter). Frontmatter is validated by a Zod schema in `content.config.ts`, keeping schema-as-source-of-truth consistent with the domain.
 
 ### 8.3 Authentication and Authorization
 
@@ -299,6 +306,7 @@ WebSocket connections are scoped to a tournament room. The backend hub maintains
 | ADR-002 | Use VueFlow for the system canvas                    | Accepted |
 | ADR-003 | Content-as-data using JSON files                     | Proposed |
 | ADR-004 | SQLite file as the persistence layer                 | Accepted |
+| ADR-005 | Nuxt Content (Markdown) for the learn section        | Accepted |
 
 ---
 

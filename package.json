@@ -9,11 +9,13 @@
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
     "typecheck": "nuxt typecheck",
+    "check:learn-links": "node scripts/check-learn-links.mjs",
     "auth:generate": "npx auth@latest generate --config ./server/adapters/better-auth.ts --yes",
     "auth:migrate": "npx auth@latest migrate  --config ./server/adapters/better-auth.ts --yes"
   },
   "dependencies": {
     "@dagrejs/dagre": "^3.0.0",
+    "@nuxt/content": "^3.14.0",
     "@nuxt/ui": "^4.8.2",
     "@vue-flow/core": "^1.48.2",
     "better-auth": "^1.6.16",

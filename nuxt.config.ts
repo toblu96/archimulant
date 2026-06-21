@@ -4,7 +4,7 @@ declare module 'nitropack/types' {
 }
 
 export default defineNuxtConfig({
-  modules: ['@nuxt/eslint', '@nuxt/ui', 'evlog/nuxt'],
+  modules: ['@nuxt/eslint', '@nuxt/ui', '@nuxt/content', 'evlog/nuxt'],
   devtools: {
     enabled: true
   },
@@ -17,6 +17,11 @@ export default defineNuxtConfig({
       github: { clientId: '', clientSecret: '' },
       database: { filePath: '.data/auth.db' }
     }
+  },
+  content: {
+    // Use Node's built-in node:sqlite, consistent with the rest of the app -
+    // avoids reintroducing the better-sqlite3 native dependency.
+    experimental: { sqliteConnector: 'native' }
   },
   compatibilityDate: '2025-01-15',
   nitro: {
