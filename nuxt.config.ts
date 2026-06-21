@@ -9,6 +9,11 @@ export default defineNuxtConfig({
     enabled: true
   },
   css: ['~/assets/css/main.css', '@vue-flow/core/dist/style.css'],
+  content: {
+    // Use Node's built-in node:sqlite, consistent with the rest of the app -
+    // avoids reintroducing the better-sqlite3 native dependency.
+    experimental: { sqliteConnector: 'native' }
+  },
   runtimeConfig: {
     scenariosDir: 'server/data/scenarios',
     auth: {
@@ -17,11 +22,6 @@ export default defineNuxtConfig({
       github: { clientId: '', clientSecret: '' },
       database: { filePath: '.data/auth.db' }
     }
-  },
-  content: {
-    // Use Node's built-in node:sqlite, consistent with the rest of the app -
-    // avoids reintroducing the better-sqlite3 native dependency.
-    experimental: { sqliteConnector: 'native' }
   },
   compatibilityDate: '2025-01-15',
   nitro: {
