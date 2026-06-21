@@ -8,6 +8,7 @@ RUN pnpm install --frozen-lockfile
 
 FROM deps AS build
 COPY . .
+ENV NODE_OPTIONS=--max-old-space-size=4096
 RUN pnpm build
 
 FROM base AS runtime
