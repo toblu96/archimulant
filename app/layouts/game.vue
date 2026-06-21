@@ -1,6 +1,9 @@
 <template>
   <div class="flex flex-col h-dvh overflow-hidden">
-    <UHeader class="flex-none">
+    <UHeader
+      class="flex-none"
+      :toggle="false"
+    >
       <template #title>
         Archimulant
       </template>
