@@ -14,18 +14,18 @@
   },
   "budget": {
     "yearlyOperational": {
-      "limit": 8000,
+      "limit": 8400,
       "baselineCost": 2400
     },
     "oneTimeInvestment": {
-      "limit": 5000,
+      "limit": 6200,
       "baselineCost": 0
     }
   },
   "targetMetrics": {
     "availability": 99.9,
     "throughputRps": 500,
-    "latencyMs": 400
+    "latencyMs": 480
   },
   "topology": {
     "nodes": [
@@ -120,7 +120,7 @@
         "target": "api-gateway",
         "metrics": {
           "latencyMs": 5,
-          "throughputRps": 1000,
+          "bandwidthRps": 1000,
           "failRate": 0.001
         }
       },
@@ -131,7 +131,7 @@
         "target": "order-service",
         "metrics": {
           "latencyMs": 5,
-          "throughputRps": 800,
+          "bandwidthRps": 800,
           "failRate": 0.005
         }
       },
@@ -142,7 +142,7 @@
         "target": "payment-service",
         "metrics": {
           "latencyMs": 5,
-          "throughputRps": 800,
+          "bandwidthRps": 800,
           "failRate": 0.015
         }
       },
@@ -153,7 +153,7 @@
         "target": "db",
         "metrics": {
           "latencyMs": 15,
-          "throughputRps": 500,
+          "bandwidthRps": 500,
           "failRate": 0.002
         }
       },
@@ -164,7 +164,7 @@
         "target": "db",
         "metrics": {
           "latencyMs": 15,
-          "throughputRps": 300,
+          "bandwidthRps": 300,
           "failRate": 0.003
         }
       },
@@ -175,7 +175,7 @@
         "target": "payment-provider",
         "metrics": {
           "latencyMs": 10,
-          "throughputRps": 500,
+          "bandwidthRps": 500,
           "failRate": 0.005
         }
       }
@@ -208,11 +208,11 @@
       "appliesTo": [
         {
           "targetId": "order-service",
-          "effects": { "availability": 0.8, "throughputRps": 250, "latencyMs": -20 }
+          "effects": { "availability": 0.1, "throughputRps": 100, "latencyMs": -15 }
         },
         {
           "targetId": "gateway-order",
-          "effects": { "latencyMs": 3, "failRate": 0.001 }
+          "effects": { "latencyMs": 3, "failRate": 0.001, "bandwidthRps": 60 }
         }
       ]
     },
@@ -225,7 +225,7 @@
       "appliesTo": [
         {
           "targetId": "payment-service",
-          "effects": { "availability": 2.0, "throughputRps": 450, "latencyMs": -150 }
+          "effects": { "availability": 0.4, "throughputRps": 250, "latencyMs": -100 }
         },
         {
           "targetId": "payment-provider-call",
@@ -242,11 +242,11 @@
       "appliesTo": [
         {
           "targetId": "order-db",
-          "effects": { "throughputRps": 300, "latencyMs": -10, "failRate": -0.001 }
+          "effects": { "bandwidthRps": 150, "latencyMs": -10, "failRate": -0.001 }
         },
         {
           "targetId": "payment-db",
-          "effects": { "throughputRps": 200, "latencyMs": -10, "failRate": -0.001 }
+          "effects": { "bandwidthRps": 200, "latencyMs": -10, "failRate": -0.001 }
         },
         {
           "targetId": "order-service",
@@ -255,6 +255,10 @@
         {
           "targetId": "payment-service",
           "effects": { "latencyMs": 2 }
+        },
+        {
+          "targetId": "db",
+          "effects": { "throughputRps": 150, "availability": 0.05 }
         }
       ]
     },
@@ -267,11 +271,11 @@
       "appliesTo": [
         {
           "targetId": "gateway-payment",
-          "effects": { "latencyMs": -200, "failRate": -0.012 }
+          "effects": { "latencyMs": -150, "failRate": -0.012, "bandwidthRps": 100 }
         },
         {
           "targetId": "payment-service",
-          "effects": { "throughputRps": 900 }
+          "effects": { "throughputRps": 200 }
         },
         {
           "targetId": "order-service",
