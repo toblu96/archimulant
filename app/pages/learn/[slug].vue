@@ -36,10 +36,7 @@ const usedIn = computed(() =>
 
 <template>
   <div>
-    <UPageSection
-      v-if="doc"
-      :ui="{ container: 'max-w-5xl' }"
-    >
+    <UPageSection v-if="doc">
       <UButton
         to="/learn"
         variant="link"
