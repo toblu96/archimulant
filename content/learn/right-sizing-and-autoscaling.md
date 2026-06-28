@@ -7,7 +7,8 @@ tags:
   - scaling
   - efficiency
 canonicalPattern: Autoscaling
-usedIn: []
+usedIn:
+  - loan-origination-strain
 goDeeper:
   - label: "Azure - Autoscaling best practices"
     url: https://learn.microsoft.com/en-us/azure/architecture/best-practices/auto-scaling

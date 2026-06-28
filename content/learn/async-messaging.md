@@ -8,6 +8,7 @@ tags:
   - resilience
 canonicalPattern: Queue-Based Load Leveling
 usedIn:
+  - loan-origination-strain
   - microservices-cascade-failure
 goDeeper:
   - label: "Azure - Queue-Based Load Leveling"

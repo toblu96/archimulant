@@ -8,6 +8,7 @@ tags:
 canonicalPattern: Health Endpoint Monitoring
 usedIn:
   - ecommerce-peak-traffic
+  - loan-origination-strain
   - microservices-cascade-failure
 goDeeper:
   - label: "Azure - Health Endpoint Monitoring"

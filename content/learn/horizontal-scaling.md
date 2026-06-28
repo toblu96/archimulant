@@ -9,6 +9,7 @@ tags:
 canonicalPattern: Horizontal Scaling
 usedIn:
   - ecommerce-peak-traffic
+  - loan-origination-strain
   - microservices-cascade-failure
 goDeeper:
   - label: "AWS - Auto Scaling"

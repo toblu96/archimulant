@@ -6,7 +6,8 @@ tags:
   - scaling
   - throughput
 canonicalPattern: Vertical Scaling
-usedIn: []
+usedIn:
+  - loan-origination-strain
 goDeeper:
   - label: "Azure - Scaling up vs scaling out"
     url: https://learn.microsoft.com/en-us/azure/well-architected/performance-efficiency/scale-partition

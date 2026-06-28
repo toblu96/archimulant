@@ -6,7 +6,8 @@ tags:
   - reliability
   - availability
 canonicalPattern: Redundancy
-usedIn: []
+usedIn:
+  - loan-origination-strain
 goDeeper:
   - label: "Azure Well-Architected - Redundancy"
     url: https://learn.microsoft.com/en-us/azure/well-architected/reliability/redundancy

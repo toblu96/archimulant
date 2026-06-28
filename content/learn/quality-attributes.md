@@ -6,6 +6,8 @@ tags:
   - basics
   - metrics
 canonicalPattern: ISO/IEC 25010
+usedIn:
+  - loan-origination-strain
 goDeeper:
   - label: "ISO/IEC 25010 - product quality model"
     url: https://iso25000.com/index.php/en/iso-25000-standards/iso-25010

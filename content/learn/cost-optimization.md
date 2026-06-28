@@ -8,6 +8,7 @@ tags:
 canonicalPattern: Cost Optimization
 usedIn:
   - ecommerce-peak-traffic
+  - loan-origination-strain
   - microservices-cascade-failure
 goDeeper:
   - label: "Azure Well-Architected - Cost Optimization"

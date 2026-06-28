@@ -8,6 +8,7 @@ tags:
 canonicalPattern: Cache-Aside
 usedIn:
   - ecommerce-peak-traffic
+  - loan-origination-strain
 goDeeper:
   - label: "Azure - Cache-Aside pattern"
     url: https://learn.microsoft.com/en-us/azure/architecture/patterns/cache-aside
