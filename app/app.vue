@@ -9,7 +9,21 @@ useSeoMeta({
 
 useHead({
   htmlAttrs: { lang: 'en' },
-  link: [{ rel: 'icon', href: '/favicon.ico' }]
+  link: [{ rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }]
+})
+
+onMounted(() => {
+  const mq = window.matchMedia('(prefers-color-scheme: dark)')
+
+  const updateFavicon = (e) => {
+    const link = document.querySelector('link[rel=\'icon\'][type=\'image/svg+xml\']')
+    if (!link) return
+    // Force browser to re-fetch by busting the cache
+    link.href = `/favicon.svg?v=${e.matches ? 'dark' : 'light'}`
+  }
+
+  mq.addEventListener('change', updateFavicon)
+  onUnmounted(() => mq.removeEventListener('change', updateFavicon))
 })
 </script>
 
