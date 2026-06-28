@@ -1,13 +1,19 @@
 {
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "github>nuxt/renovate-config-nuxt"
   ],
   "lockFileMaintenance": {
-    "enabled": true
+    "enabled": true,
+    "automerge": true
   },
   "packageRules": [{
     "matchDepTypes": ["resolutions"],
     "enabled": false
+  }, {
+    "matchUpdateTypes": ["minor", "patch"],
+    "matchCurrentVersion": "!/^0/",
+    "automerge": true
   }],
   "postUpdateOptions": ["pnpmDedupe"]
 }
