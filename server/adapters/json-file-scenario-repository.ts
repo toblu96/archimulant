@@ -12,6 +12,7 @@ const MetricsSchema = z
   .object({
     availability: z.number().min(0).max(100).optional(),
     throughputRps: z.number().positive().optional(),
+    bandwidthRps: z.number().positive().optional(),
     latencyMs: z.number().positive().optional(),
     requestsPerSecond: z.number().positive().optional(),
     failRate: z.number().positive().optional()
@@ -48,6 +49,7 @@ const ImprovementSchema = z.object({
     effects: z.object({
       availability: z.number().min(-100).max(100).optional(),
       throughputRps: z.number().optional(),
+      bandwidthRps: z.number().optional(),
       latencyMs: z.number().optional(),
       requestsPerSecond: z.number().optional(),
       failRate: z.number().optional()

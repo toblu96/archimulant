@@ -1,0 +1,407 @@
+{
+  "id": "loan-origination-strain",
+  "meta": {
+    "title": "Loan Origination Under Strain",
+    "description": "Your bank's Loan Origination Service processes every application synchronously: a fragile Core Banking Adapter, a slow external credit bureau, and a customer database without connection pooling. Approvals crawl, the adapter keeps timing out under load, and there's barely enough capacity to keep up. There are far more possible fixes than budget for - pick wisely.",
+    "difficulty": "advanced",
+    "tags": [
+      "caching",
+      "async-messaging",
+      "horizontal-scaling",
+      "vertical-scaling",
+      "legacy-integration",
+      "cost-optimization"
+    ],
+    "estimatedMinutes": 30
+  },
+  "budget": {
+    "yearlyOperational": {
+      "limit": 102000,
+      "baselineCost": 20000
+    },
+    "oneTimeInvestment": {
+      "limit": 165000,
+      "baselineCost": 0
+    }
+  },
+  "targetMetrics": {
+    "availability": 92,
+    "throughputRps": 22,
+    "latencyMs": 780
+  },
+  "topology": {
+    "nodes": [
+      {
+        "id": "customer-agent",
+        "label": "Customer Service Agent",
+        "type": "person",
+        "position": { "x": 50, "y": 300 },
+        "metrics": { "requestsPerSecond": 120 }
+      },
+      {
+        "id": "loan-service",
+        "label": "Loan Service",
+        "type": "service",
+        "position": { "x": 320, "y": 300 },
+        "metrics": { "availability": 0.99, "throughputRps": 90, "latencyMs": 25 }
+      },
+      {
+        "id": "customer-data-service",
+        "label": "Customer Data Service",
+        "type": "service",
+        "position": { "x": 600, "y": 120 },
+        "metrics": { "availability": 0.97, "throughputRps": 60, "latencyMs": 20 }
+      },
+      {
+        "id": "customer-database",
+        "label": "Customer Database",
+        "type": "database",
+        "position": { "x": 880, "y": 120 },
+        "metrics": { "availability": 0.999, "throughputRps": 55, "latencyMs": 8 }
+      },
+      {
+        "id": "core-banking-adapter",
+        "label": "Core Banking Adapter",
+        "type": "service",
+        "position": { "x": 600, "y": 300 },
+        "metrics": { "availability": 0.90, "throughputRps": 15, "latencyMs": 50 }
+      },
+      {
+        "id": "core-banking-system",
+        "label": "Core Banking System",
+        "type": "externalSystem",
+        "position": { "x": 880, "y": 300 },
+        "metrics": { "availability": 0.97, "throughputRps": 40, "latencyMs": 60 }
+      },
+      {
+        "id": "reporting-service",
+        "label": "Reporting Service",
+        "type": "service",
+        "position": { "x": 600, "y": 460 },
+        "metrics": { "availability": 0.97, "throughputRps": 30, "latencyMs": 15 }
+      },
+      {
+        "id": "interest-rate-service",
+        "label": "Interest Rate Service",
+        "type": "service",
+        "position": { "x": 320, "y": 480 },
+        "metrics": { "availability": 0.995, "throughputRps": 100, "latencyMs": 12 }
+      },
+      {
+        "id": "credit-rating-adapter",
+        "label": "Credit Rating Adapter",
+        "type": "service",
+        "position": { "x": 600, "y": 620 },
+        "metrics": { "availability": 0.95, "throughputRps": 20, "latencyMs": 25 }
+      },
+      {
+        "id": "credit-rating-system",
+        "label": "Credit Rating System",
+        "type": "externalSystem",
+        "position": { "x": 880, "y": 620 },
+        "metrics": { "availability": 0.985, "throughputRps": 25, "latencyMs": 90 }
+      }
+    ],
+    "edges": [
+      {
+        "id": "create-new-loan",
+        "label": "Create New Loan",
+        "source": "customer-agent",
+        "target": "loan-service",
+        "metrics": { "latencyMs": 5, "bandwidthRps": 130, "failRate": 0.001 }
+      },
+      {
+        "id": "get-customer-data",
+        "label": "Get Customer Data",
+        "source": "loan-service",
+        "target": "customer-data-service",
+        "metrics": { "latencyMs": 180, "bandwidthRps": 55, "failRate": 0.01 }
+      },
+      {
+        "id": "customer-db-access",
+        "label": "Customer Database Access",
+        "source": "customer-data-service",
+        "target": "customer-database",
+        "metrics": { "latencyMs": 90, "bandwidthRps": 40, "failRate": 0.004 }
+      },
+      {
+        "id": "get-balances",
+        "label": "Get Balances",
+        "source": "loan-service",
+        "target": "core-banking-adapter",
+        "metrics": { "latencyMs": 220, "bandwidthRps": 14, "failRate": 0.025 }
+      },
+      {
+        "id": "core-banking-access",
+        "label": "Core Banking Access",
+        "source": "core-banking-adapter",
+        "target": "core-banking-system",
+        "metrics": { "latencyMs": 80, "bandwidthRps": 18, "failRate": 0.012 }
+      },
+      {
+        "id": "provide-reporting-data",
+        "label": "Provide Reporting Data",
+        "source": "loan-service",
+        "target": "reporting-service",
+        "metrics": { "latencyMs": 260, "bandwidthRps": 22, "failRate": 0.003 }
+      },
+      {
+        "id": "calculate-interest-rate",
+        "label": "Calculate Interest Rate",
+        "source": "loan-service",
+        "target": "interest-rate-service",
+        "metrics": { "latencyMs": 40, "bandwidthRps": 95, "failRate": 0.001 }
+      },
+      {
+        "id": "get-customer-credit-rating",
+        "label": "Get Customer Credit Rating",
+        "source": "interest-rate-service",
+        "target": "credit-rating-adapter",
+        "metrics": { "latencyMs": 230, "bandwidthRps": 18, "failRate": 0.018 }
+      },
+      {
+        "id": "credit-rating-access",
+        "label": "Credit Rating Access",
+        "source": "credit-rating-adapter",
+        "target": "credit-rating-system",
+        "metrics": { "latencyMs": 70, "bandwidthRps": 20, "failRate": 0.009 }
+      }
+    ]
+  },
+  "improvements": [
+    {
+      "id": "async-credit-rating-response",
+      "title": "Async Credit Rating Response",
+      "description": "Decouple the credit rating lookup using asynchronous messaging instead of waiting on the bureau synchronously. Meaningfully improves the Credit Rating Adapter's availability and frees up capacity, though the latency win is smaller than caching.",
+      "learnMoreSlug": "async-messaging",
+      "cost": { "yearlyOperational": 8000, "oneTimeInvestment": 10000 },
+      "appliesTo": [
+        { "targetId": "credit-rating-adapter", "effects": { "availability": 0.25, "throughputRps": 10 } },
+        { "targetId": "get-customer-credit-rating", "effects": { "latencyMs": -90, "failRate": -0.006 } },
+        { "targetId": "credit-rating-access", "effects": { "bandwidthRps": 15 } }
+      ]
+    },
+    {
+      "id": "cache-credit-rating-response",
+      "title": "Cache Credit Rating Responses",
+      "description": "Cache the Credit Rating Adapter's responses for repeat lookups instead of always hitting the external bureau. Cuts latency and load sharply, with a smaller availability gain than full async decoupling.",
+      "learnMoreSlug": "caching-strategies",
+      "cost": { "yearlyOperational": 5000, "oneTimeInvestment": 10000 },
+      "appliesTo": [
+        { "targetId": "credit-rating-adapter", "effects": { "availability": 0.12, "throughputRps": 15 } },
+        { "targetId": "get-customer-credit-rating", "effects": { "latencyMs": -150, "bandwidthRps": 30, "failRate": -0.01 } }
+      ]
+    },
+    {
+      "id": "async-customer-data-response",
+      "title": "Async Customer Data Response",
+      "description": "Make the interface between the Loan Service and Customer Data Service asynchronous. Meaningfully improves the availability of the Customer Data Service and removes it from the synchronous critical path.",
+      "learnMoreSlug": "async-messaging",
+      "cost": { "yearlyOperational": 7000, "oneTimeInvestment": 15000 },
+      "appliesTo": [
+        { "targetId": "customer-data-service", "effects": { "availability": 0.25 } },
+        { "targetId": "get-customer-data", "effects": { "latencyMs": -90, "failRate": -0.006 } }
+      ]
+    },
+    {
+      "id": "customer-data-clustering",
+      "title": "Customer Data Clustering",
+      "description": "Run the Customer Data Service as a clustered set of instances. Increases availability and throughput substantially, at a higher cost than vertical scaling.",
+      "learnMoreSlug": "horizontal-scaling",
+      "cost": { "yearlyOperational": 15000, "oneTimeInvestment": 20000 },
+      "appliesTo": [
+        { "targetId": "customer-data-service", "effects": { "availability": 0.3, "throughputRps": 35 } },
+        { "targetId": "get-customer-data", "effects": { "bandwidthRps": 25 } }
+      ]
+    },
+    {
+      "id": "customer-data-vertical-scaling",
+      "title": "Customer Data Vertical Scaling",
+      "description": "Scale the Customer Data Service vertically with more memory and CPU, growing its thread pool. Cheaper than clustering, but the gains are smaller and latency-focused.",
+      "learnMoreSlug": "vertical-scaling",
+      "cost": { "yearlyOperational": 8000, "oneTimeInvestment": 18000 },
+      "appliesTo": [
+        { "targetId": "customer-data-service", "effects": { "throughputRps": 15, "latencyMs": -8 } },
+        { "targetId": "get-customer-data", "effects": { "latencyMs": -40 } }
+      ]
+    },
+    {
+      "id": "automate-customer-data-health-check",
+      "title": "Automate Customer Data Health Check",
+      "description": "Add an automated health check to the Customer Data Service. When it fails, the service restarts automatically instead of degrading silently.",
+      "learnMoreSlug": "health-checks",
+      "cost": { "yearlyOperational": 2000, "oneTimeInvestment": 8000 },
+      "appliesTo": [
+        { "targetId": "customer-data-service", "effects": { "availability": 0.12 } }
+      ]
+    },
+    {
+      "id": "customer-db-connection-pooling",
+      "title": "Customer Database Connection Pooling",
+      "description": "Reuse database connections instead of opening a new one per request. Lowers average latency and avoids exhausting available connections under load.",
+      "cost": { "yearlyOperational": 1000, "oneTimeInvestment": 5000 },
+      "appliesTo": [
+        { "targetId": "customer-data-service", "effects": { "availability": 0.06 } },
+        { "targetId": "customer-db-access", "effects": { "latencyMs": -50, "bandwidthRps": 20, "failRate": -0.002 } }
+      ]
+    },
+    {
+      "id": "deferring-customer-data-work",
+      "title": "Defer Non-Critical Customer Data Work",
+      "description": "Push non-critical customer data calls to a nightly batch instead of serving them inline. Takes load off the read path and slightly improves availability.",
+      "cost": { "yearlyOperational": 2000, "oneTimeInvestment": 4000 },
+      "appliesTo": [
+        { "targetId": "customer-data-service", "effects": { "availability": 0.05 } },
+        { "targetId": "get-customer-data", "effects": { "bandwidthRps": 15, "latencyMs": -30 } }
+      ]
+    },
+    {
+      "id": "graceful-degradation-core-banking",
+      "title": "Graceful Degradation of Core Banking Adapter",
+      "description": "Let the Loan Service keep functioning with stale balances when the Core Banking Adapter is unavailable, reconciling later. Significantly improves perceived availability of the loan flow.",
+      "learnMoreSlug": "redundancy-and-failover",
+      "cost": { "yearlyOperational": 30000, "oneTimeInvestment": 30000 },
+      "appliesTo": [
+        { "targetId": "loan-service", "effects": { "availability": 0.35 } },
+        { "targetId": "get-balances", "effects": { "failRate": -0.01 } }
+      ]
+    },
+    {
+      "id": "improve-quality-core-banking-adapter",
+      "title": "Improve Quality of Core Banking Adapter",
+      "description": "Invest directly in the Core Banking Adapter's code quality and test coverage. Improves its availability, latency and throughput all at once - the broadest single fix for the adapter.",
+      "learnMoreSlug": "quality-attributes",
+      "cost": { "yearlyOperational": 10000, "oneTimeInvestment": 30000 },
+      "appliesTo": [
+        { "targetId": "core-banking-adapter", "effects": { "availability": 0.3, "latencyMs": -15, "throughputRps": 25 } },
+        { "targetId": "get-balances", "effects": { "failRate": -0.008 } }
+      ]
+    },
+    {
+      "id": "parallel-core-banking-calls",
+      "title": "Parallel Core Banking Calls",
+      "description": "Bundle multiple balance lookups into concurrent calls to the Core Banking System instead of issuing them one by one. Improves the adapter's response time and throughput.",
+      "cost": { "yearlyOperational": 9000, "oneTimeInvestment": 14000 },
+      "appliesTo": [
+        { "targetId": "core-banking-access", "effects": { "latencyMs": -30, "bandwidthRps": 15 } },
+        { "targetId": "core-banking-adapter", "effects": { "throughputRps": 10 } }
+      ]
+    },
+    {
+      "id": "reduce-load-core-banking-system",
+      "title": "Reduce Load on Core Banking System",
+      "description": "Add better indices and batch balance lookups so fewer calls hit the Core Banking System per request. Frees up capacity and reduces error pressure on the adapter.",
+      "cost": { "yearlyOperational": 15000, "oneTimeInvestment": 15000 },
+      "appliesTo": [
+        { "targetId": "get-balances", "effects": { "bandwidthRps": 20, "latencyMs": -20 } },
+        { "targetId": "core-banking-adapter", "effects": { "availability": 0.1, "throughputRps": 15 } }
+      ]
+    },
+    {
+      "id": "parallel-loan-service-calls",
+      "title": "Parallel Loan Service Calls",
+      "description": "Run the Loan Service's calls to Customer Data and Core Banking in parallel instead of sequentially. Cuts latency noticeably, but the added concurrency complexity slightly lowers the Loan Service's availability.",
+      "cost": { "yearlyOperational": 5000, "oneTimeInvestment": 15000 },
+      "appliesTo": [
+        { "targetId": "get-customer-data", "effects": { "latencyMs": -30 } },
+        { "targetId": "get-balances", "effects": { "latencyMs": -30 } },
+        { "targetId": "loan-service", "effects": { "availability": -0.05 } }
+      ]
+    },
+    {
+      "id": "reporting-service-batching",
+      "title": "Reporting Service Batching",
+      "description": "Stop feeding the Reporting Service synchronously on every loan creation. Export data in a nightly batch instead, decoupling it from the loan flow entirely - the single biggest latency win available.",
+      "learnMoreSlug": "async-messaging",
+      "cost": { "yearlyOperational": 15000, "oneTimeInvestment": 20000 },
+      "appliesTo": [
+        { "targetId": "reporting-service", "effects": { "availability": 0.25 } },
+        { "targetId": "provide-reporting-data", "effects": { "latencyMs": -180, "bandwidthRps": 30, "failRate": -0.002 } }
+      ]
+    },
+    {
+      "id": "reporting-service-vertical-scaling",
+      "title": "Reporting Service Vertical Scaling",
+      "description": "Scale the Reporting Service vertically with more memory and CPU. A cheaper, smaller improvement to its response time than batching.",
+      "learnMoreSlug": "vertical-scaling",
+      "cost": { "yearlyOperational": 7000, "oneTimeInvestment": 17000 },
+      "appliesTo": [
+        { "targetId": "provide-reporting-data", "effects": { "latencyMs": -60 } },
+        { "targetId": "reporting-service", "effects": { "throughputRps": 10 } }
+      ]
+    },
+    {
+      "id": "loan-service-zero-downtime-deployments",
+      "title": "Loan Service Zero-Downtime Deployments",
+      "description": "Invest in deployment tooling so new Loan Service versions roll out without incurring downtime. Improves the service's availability directly.",
+      "cost": { "yearlyOperational": 7000, "oneTimeInvestment": 16000 },
+      "appliesTo": [
+        { "targetId": "loan-service", "effects": { "availability": 0.15 } }
+      ]
+    },
+    {
+      "id": "introduce-monitoring-platform",
+      "title": "Introduce Monitoring Platform",
+      "description": "Roll out a monitoring and alerting platform across the Loan Service, Core Banking Adapter, Credit Rating Adapter and Reporting Service. A broad but modest availability boost across all of them.",
+      "learnMoreSlug": "health-checks",
+      "cost": { "yearlyOperational": 12000, "oneTimeInvestment": 20000 },
+      "appliesTo": [
+        { "targetId": "loan-service", "effects": { "availability": 0.05 } },
+        { "targetId": "customer-data-service", "effects": { "availability": 0.05 } },
+        { "targetId": "core-banking-adapter", "effects": { "availability": 0.05 } },
+        { "targetId": "reporting-service", "effects": { "availability": 0.05 } },
+        { "targetId": "credit-rating-adapter", "effects": { "availability": 0.05 } }
+      ]
+    },
+    {
+      "id": "improve-test-automation",
+      "title": "Improve Test Automation",
+      "description": "Invest in automated test coverage across the Loan Service, Interest Rate Service, Customer Database and Core Banking Adapter. Catches bugs before production, improving availability across the board.",
+      "learnMoreSlug": "quality-attributes",
+      "cost": { "yearlyOperational": 10000, "oneTimeInvestment": 21000 },
+      "appliesTo": [
+        { "targetId": "loan-service", "effects": { "availability": 0.1 } },
+        { "targetId": "interest-rate-service", "effects": { "availability": 0.03 } },
+        { "targetId": "customer-database", "effects": { "availability": 0.05 } },
+        { "targetId": "core-banking-adapter", "effects": { "availability": 0.12 } }
+      ]
+    },
+    {
+      "id": "container-orchestration-platform",
+      "title": "Container Orchestration Platform",
+      "description": "Migrate every internal service to a new container orchestration platform. A major infrastructure investment that nudges availability up everywhere - but at a cost that rivals the entire rest of the budget combined.",
+      "learnMoreSlug": "right-sizing-and-autoscaling",
+      "cost": { "yearlyOperational": 50000, "oneTimeInvestment": 100000 },
+      "appliesTo": [
+        { "targetId": "loan-service", "effects": { "availability": 0.05 } },
+        { "targetId": "customer-data-service", "effects": { "availability": 0.05 } },
+        { "targetId": "customer-database", "effects": { "availability": 0.03 } },
+        { "targetId": "core-banking-adapter", "effects": { "availability": 0.05 } },
+        { "targetId": "reporting-service", "effects": { "availability": 0.05 } },
+        { "targetId": "interest-rate-service", "effects": { "availability": 0.03 } },
+        { "targetId": "credit-rating-adapter", "effects": { "availability": 0.05 } }
+      ]
+    },
+    {
+      "id": "budget-credit-bureau",
+      "title": "Switch to Budget Credit Bureau (Cost Saving)",
+      "description": "Use a cheaper third-party credit bureau to cut operational costs. Their API is slower and less reliable than our current provider.",
+      "learnMoreSlug": "cost-optimization",
+      "cost": { "yearlyOperational": -8000, "oneTimeInvestment": 0 },
+      "appliesTo": [
+        { "targetId": "credit-rating-access", "effects": { "latencyMs": 60, "failRate": 0.015 } }
+      ]
+    },
+    {
+      "id": "disable-core-banking-monitoring",
+      "title": "Disable Core Banking Adapter Monitoring (Cost Saving)",
+      "description": "Skip health checks and alerting on the Core Banking Adapter to save on observability tooling. Failures go unnoticed until customers start reporting errors.",
+      "learnMoreSlug": "cost-optimization",
+      "cost": { "yearlyOperational": -10000, "oneTimeInvestment": -8000 },
+      "appliesTo": [
+        { "targetId": "core-banking-adapter", "effects": { "availability": -0.2 } },
+        { "targetId": "get-balances", "effects": { "failRate": 0.015 } }
+      ]
+    }
+  ]
+}
