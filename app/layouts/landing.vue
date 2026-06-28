@@ -23,7 +23,10 @@ const items = computed<NavigationMenuItem[]>(() => [
   <div>
     <UHeader>
       <template #title>
-        Archimulant
+        <div class="flex items-center">
+          <IconTbl class="size-6 mr-3" />
+          Archimulant
+        </div>
       </template>
 
       <UNavigationMenu :items="items" />
