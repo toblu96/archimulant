@@ -79,6 +79,7 @@ const setupBudgetPct = computed(() =>
       color="success"
       variant="soft"
       title="All targets met!"
+      class="shrink-0"
     />
 
     <!-- Metrics -->
