@@ -28,13 +28,13 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@iconify-json/simple-icons": "^1.2.89",
+    "@iconify-json/simple-icons": "^1.2.90",
     "@iconify-json/tabler": "^1.2.35",
     "@nuxt/eslint": "^1.16.0",
-    "@types/node": "^25.9.4",
-    "eslint": "^10.6.0",
+    "@types/node": "^25.9.5",
+    "eslint": "^10.7.0",
     "typescript": "^6.0.3",
-    "vue-tsc": "^3.3.6"
+    "vue-tsc": "^3.3.7"
   },
-  "packageManager": "pnpm@11.10.0"
+  "packageManager": "pnpm@11.13.0"
 }
