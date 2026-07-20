@@ -23,7 +23,7 @@
     "@vue-flow/core": "^1.48.2",
     "better-auth": "^1.6.23",
     "evlog": "^2.20.0",
-    "nuxt": "^4.4.8",
+    "nuxt": "^4.5.0",
     "tailwindcss": "^4.3.2",
     "zod": "^4.4.3"
   },
