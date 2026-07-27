@@ -22,13 +22,13 @@
     "@nuxt/ui": "^4.10.0",
     "@vue-flow/core": "^1.48.2",
     "better-auth": "^1.6.25",
-    "evlog": "^2.22.3",
+    "evlog": "^2.22.4",
     "nuxt": "^4.5.0",
     "tailwindcss": "^4.3.3",
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@iconify-json/simple-icons": "^1.2.91",
+    "@iconify-json/simple-icons": "^1.2.92",
     "@iconify-json/tabler": "^1.2.37",
     "@nuxt/eslint": "^1.16.0",
     "@types/node": "^25.9.5",
