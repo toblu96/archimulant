@@ -22,19 +22,19 @@
     "@nuxt/ui": "^4.10.0",
     "@vue-flow/core": "^1.48.2",
     "better-auth": "^1.6.25",
-    "evlog": "^2.22.4",
+    "evlog": "^2.23.0",
     "nuxt": "^4.5.1",
     "tailwindcss": "^4.3.3",
     "zod": "^4.4.3"
   },
   "devDependencies": {
     "@iconify-json/simple-icons": "^1.2.92",
-    "@iconify-json/tabler": "^1.2.37",
+    "@iconify-json/tabler": "^1.2.38",
     "@nuxt/eslint": "^1.16.0",
     "@types/node": "^25.9.5",
     "eslint": "^10.8.0",
     "typescript": "^6.0.3",
-    "vue-tsc": "^3.3.8"
+    "vue-tsc": "^3.3.9"
   },
-  "packageManager": "pnpm@11.17.0"
+  "packageManager": "pnpm@11.18.0"
 }
