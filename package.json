@@ -22,7 +22,7 @@
     "@nuxt/ui": "^4.10.0",
     "@vue-flow/core": "^1.48.2",
     "better-auth": "^1.6.26",
-    "evlog": "^2.24.0",
+    "evlog": "^2.25.0",
     "nuxt": "^4.5.2",
     "tailwindcss": "^4.3.3",
     "zod": "^4.4.3"
@@ -36,5 +36,5 @@
     "typescript": "^6.0.3",
     "vue-tsc": "^3.3.9"
   },
-  "packageManager": "pnpm@11.20.0"
+  "packageManager": "pnpm@11.21.0"
 }
