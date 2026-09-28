@@ -18,23 +18,23 @@
   },
   "dependencies": {
     "@dagrejs/dagre": "^3.1.1",
-    "@nuxt/content": "^3.16.0",
-    "@nuxt/ui": "^4.11.1",
+    "@nuxt/content": "^3.16.1",
+    "@nuxt/ui": "^4.11.2",
     "@vue-flow/core": "^1.48.2",
-    "better-auth": "^1.7.5",
+    "better-auth": "^1.7.6",
     "evlog": "^2.29.0",
     "nuxt": "^4.5.2",
     "tailwindcss": "^4.3.3",
     "zod": "^4.6.5"
   },
   "devDependencies": {
-    "@iconify-json/simple-icons": "^1.2.96",
-    "@iconify-json/tabler": "^1.2.38",
+    "@iconify-json/simple-icons": "^1.2.97",
+    "@iconify-json/tabler": "^1.2.40",
     "@nuxt/eslint": "^1.17.0",
     "@types/node": "^25.9.8",
     "eslint": "^10.11.0",
     "typescript": "^6.0.3",
     "vue-tsc": "^3.3.11"
   },
-  "packageManager": "pnpm@11.27.0"
+  "packageManager": "pnpm@11.28.0"
 }
