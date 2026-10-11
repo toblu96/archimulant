@@ -33,7 +33,7 @@
     "@nuxt/eslint": "^1.17.0",
     "@types/node": "^25.9.9",
     "eslint": "^10.12.0",
-    "typescript": "^6.0.3",
+    "typescript": "^7.0.2",
     "vue-tsc": "^3.3.12"
   },
   "packageManager": "pnpm@11.28.4"
