@@ -21,20 +21,20 @@
     "@nuxt/content": "^3.16.2",
     "@nuxt/ui": "^4.12.0",
     "@vue-flow/core": "^1.48.2",
-    "better-auth": "^1.7.12",
-    "evlog": "^2.33.1",
+    "better-auth": "^1.7.14",
+    "evlog": "^2.34.0",
     "nuxt": "^4.6.3",
     "tailwindcss": "^4.3.3",
     "zod": "^4.6.7"
   },
   "devDependencies": {
-    "@iconify-json/simple-icons": "^1.2.100",
-    "@iconify-json/tabler": "^1.2.42",
+    "@iconify-json/simple-icons": "^1.2.101",
+    "@iconify-json/tabler": "^1.2.43",
     "@nuxt/eslint": "^1.17.0",
     "@types/node": "^25.9.9",
-    "eslint": "^10.13.0",
+    "eslint": "^10.14.0",
     "typescript": "^6.0.3",
-    "vue-tsc": "^3.3.13"
+    "vue-tsc": "^3.3.14"
   },
-  "packageManager": "pnpm@11.28.8"
+  "packageManager": "pnpm@11.28.10"
 }
